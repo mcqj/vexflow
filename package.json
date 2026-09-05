@@ -1,0 +1,137 @@
+{
+  "name": "vexflow",
+  "version": "5.1.0",
+  "description": "A JavaScript library for rendering music notation and guitar tablature.",
+  "exports": {
+    ".": {
+      "types": "./build/types/entry/vexflow.d.ts",
+      "require": "./build/cjs/vexflow.js",
+      "import": "./build/esm/entry/vexflow.js"
+    },
+    "./core": {
+      "types": "./build/types/entry/vexflow-core.d.ts",
+      "require": "./build/cjs/vexflow-core.js",
+      "import": "./build/esm/entry/vexflow-core.js"
+    },
+    "./bravura": {
+      "types": "./build/types/entry/vexflow-bravura.d.ts",
+      "require": "./build/cjs/vexflow-bravura.js",
+      "import": "./build/esm/entry/vexflow-bravura.js"
+    }
+  },
+  "main": "./build/cjs/vexflow.js",
+  "browser": "./build/cjs/vexflow.js",
+  "module": "./build/esm/entry/vexflow.js",
+  "types": "./build/types/entry/vexflow.d.ts",
+  "unpkg": "./build/cjs/vexflow.js",
+  "jsdelivr": "./build/cjs/vexflow.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vexflow/vexflow.git"
+  },
+  "author": {
+    "name": "VexFlow Authors",
+    "email": "mohit@muthanna.com",
+    "url": "https://github.com/vexflow/vexflow/"
+  },
+  "license": "MIT",
+  "files": [
+    "build",
+    "tests/flow.html",
+    "tests/flow.css",
+    "tests/qunit/qunit.css",
+    "tests/qunit/qunit.js",
+    "AUTHORS.md"
+  ],
+  "bugs": {
+    "url": "https://github.com/vexflow/vexflow/issues"
+  },
+  "devDependencies": {
+    "@eslint/compat": "^1.2.9",
+    "@eslint/eslintrc": "^3.3.1",
+    "@eslint/js": "^9.28.0",
+    "@types/node": "^22.15.30",
+    "@typescript-eslint/eslint-plugin": "^8.33.1",
+    "@typescript-eslint/parser": "^8.33.1",
+    "@vexflow-fonts/academico": "^1.0.1",
+    "@vexflow-fonts/bravura": "^1.0.2",
+    "@vexflow-fonts/bravuratext": "^1.0.0",
+    "@vexflow-fonts/edwin": "^1.0.1",
+    "@vexflow-fonts/finaleash": "^1.0.1",
+    "@vexflow-fonts/finaleashtext": "^1.0.1",
+    "@vexflow-fonts/finalebroadway": "^1.0.0",
+    "@vexflow-fonts/finalebroadwaytext": "^1.0.0",
+    "@vexflow-fonts/finalejazz": "^1.0.0",
+    "@vexflow-fonts/finalejazztext": "^1.0.0",
+    "@vexflow-fonts/finalemaestro": "^1.0.0",
+    "@vexflow-fonts/finalemaestrotext": "^1.0.0",
+    "@vexflow-fonts/gonville": "1.0.0",
+    "@vexflow-fonts/gootville": "^1.0.1",
+    "@vexflow-fonts/gootvilletext": "^1.0.1",
+    "@vexflow-fonts/leipzig": "^1.0.1",
+    "@vexflow-fonts/leland": "^1.0.1",
+    "@vexflow-fonts/lelandtext": "^1.0.1",
+    "@vexflow-fonts/musejazz": "^1.0.1",
+    "@vexflow-fonts/musejazztext": "^1.0.1",
+    "@vexflow-fonts/nepomuk": "^1.0.1",
+    "@vexflow-fonts/petaluma": "^1.0.1",
+    "@vexflow-fonts/petalumascript": "^1.0.0",
+    "@vexflow-fonts/petalumatext": "^1.0.1",
+    "@vexflow-fonts/robotoslab": "^1.0.0",
+    "@vexflow-fonts/sebastian": "^1.0.1",
+    "@vexflow-fonts/sebastiantext": "^1.0.0",
+    "canvas": "^3.1.0",
+    "concurrently": "^9.1.2",
+    "eslint": "^9.28.0",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-prettier": "^5.4.1",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "globals": "^17.12.0",
+    "jsdom": "^30.0.1",
+    "jspdf": "^4.0.0",
+    "magic-string": "^1.2.3",
+    "opentype.js": "^1.3.4",
+    "playwright-chromium": "^1.63.0",
+    "prettier": "^3.5.3",
+    "recursive-copy": "^2.0.14",
+    "release-it": "^19.0.3",
+    "svg2pdf.js": "^2.5.0",
+    "typescript": "^5.8.3",
+    "vite": "^8.2.2",
+    "vitest": "^5.0.0"
+  },
+  "scripts": {
+    "start": "npm run dev",
+    "dev": "node tools/build.mjs watch",
+    "build": "npm run clean && npm run lint && npm run build:cjs && npm run build:esm && npm run build:types",
+    "build:cjs": "node tools/build.mjs cjs",
+    "build:esm": "node tools/build.mjs esm",
+    "build:types": "node tools/build.mjs types",
+    "build:docs": "typedoc",
+    "clean": "node tools/build.mjs clean",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "reference": "node tools/build.mjs reference",
+    "test:reference": "npm test && npm run build:cjs && npm run generate:current && npm run generate:reference && npm run diff:reference",
+    "test:reference:cache": "node tools/build.mjs save-reference-images && npm test && npm run build:cjs && npm run generate:current && node tools/build.mjs restore-reference-images && npm run diff:reference",
+    "generate:current": "node ./tools/generate_images.js build ./build/images/current",
+    "generate:reference": "node ./tools/generate_images.js reference ./build/images/reference",
+    "diff:reference": "./tools/visual_regression.sh reference",
+    "lint": "eslint --fix entry/**/*.ts src/**/*.ts tests/**/*.ts tests/formatter/*.js vite.config.mjs tools/build.mjs"
+  },
+  "homepage": "https://vexflow.com/",
+  "keywords": [
+    "music",
+    "notation",
+    "piano",
+    "guitar",
+    "tablature"
+  ],
+  "dependencies": {
+    "structured-clone-es": "^1.0.0"
+  },
+  "overrides": {
+    "undici": "6.23.0"
+  }
+}

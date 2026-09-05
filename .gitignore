@@ -1,0 +1,20 @@
+node_modules
+
+reference*
+releases
+build
+demos/node/output
+graphs
+.eslintcache
+.DS_Store
+
+# editor temp files
+*.sw?
+.vscode
+
+docs/*.html
+docs/public
+docs/docco.css
+!docs/index.html
+npm-debug.log
+
