@@ -11,18 +11,11 @@
     "skipLibCheck": true /* Skip type checking of declaration files. */,
     "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */,
     "moduleResolution": "bundler",
-    "lib": [
-      "dom",
-      "es2020"
-    ],
+    "lib": ["dom", "es2022"],
     "removeComments": false,
-    "noImplicitOverride": true, /* Require explicit `override` keyword on all class members that override a base-class member. */
+    "noImplicitOverride": true /* Require explicit `override` keyword on all class members that override a base-class member. */
   },
-  "include": [
-    "./src",
-    "./entry",
-    "./tests"
-  ],
+  "include": ["./src", "./entry", "./tests"],
   "exclude": [
     "node_modules/**/*",
     "tools/fonts/legacy",

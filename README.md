@@ -4,6 +4,8 @@ Version of Vexflow that inherits from the original by Mohit Muthanna Cheppudira.
 
 VexFlow is an open-source library for rendering sheet music. It is written in TypeScript, and outputs scores to HTML Canvas and SVG. It works in browsers and in Node.js projects (e.g., a command line script to save a score as a PDF).
 
+VexFlow targets modern browsers and Node.js 17 or newer, with native `structuredClone()` support.
+
 ## Quick Start
 
 The simplest way to add VexFlow to a web page is via a `<script>` tag.
@@ -38,13 +40,15 @@ npm install
 
 ### Run
 
-Start the Vite development build in watch mode:
+Start the Vite development server:
 
 ```sh
 npm start
 ```
 
-`npm start` is an alias for `npm run dev`. It rebuilds the CommonJS bundles in `build/cjs/` when source files change. The examples in `demos/` use the generated files; see each demo's README or source comments for its launch instructions.
+Vite opens `http://127.0.0.1:5173/`, which redirects to the browser test page. The test page loads the TypeScript source directly and updates modules when source files change. This workflow does not write distributable files to `build/`. Run `npm run dev` to start the same server without opening a browser, then visit `http://127.0.0.1:5173/`.
+
+Some examples in `demos/` intentionally exercise generated package artifacts. Run `npm run build` before opening those examples.
 
 ### Build
 
@@ -103,7 +107,7 @@ Factory and EasyScore are VexFlow's high-level API for creating staves, voices, 
 
 ```javascript
 const factory = new VexFlow.Factory({
-  renderer: { elementId: 'output', width: 500, height: 200 },
+  renderer: { elementId: "output", width: 500, height: 200 },
 });
 
 const score = factory.EasyScore();
@@ -112,12 +116,12 @@ const system = factory.System();
 system
   .addStave({
     voices: [
-      score.voice(score.notes('C#5/q, B4, A4, G#4', { stem: 'up' })),
-      score.voice(score.notes('C#4/h, C#4', { stem: 'down' })),
+      score.voice(score.notes("C#5/q, B4, A4, G#4", { stem: "up" })),
+      score.voice(score.notes("C#4/h, C#4", { stem: "down" })),
     ],
   })
-  .addClef('treble')
-  .addTimeSignature('4/4');
+  .addClef("treble")
+  .addTimeSignature("4/4");
 
 factory.draw();
 ```
@@ -134,7 +138,7 @@ You can use the low-level VexFlow API if you need more control. Below, we render
 const { Renderer, Stave } = VexFlow;
 
 // Create an SVG renderer and attach it to the DIV element with id="output".
-const div = document.getElementById('output');
+const div = document.getElementById("output");
 const renderer = new Renderer(div, Renderer.Backends.SVG);
 
 // Configure the rendering context.
@@ -145,7 +149,7 @@ const context = renderer.getContext();
 const stave = new Stave(10, 40, 400);
 
 // Add a clef and time signature.
-stave.addClef('treble').addTimeSignature('4/4');
+stave.addClef("treble").addTimeSignature("4/4");
 
 // Connect it to the rendering context and draw!
 stave.setContext(context).draw();

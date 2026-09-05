@@ -27,12 +27,11 @@
   "jsdelivr": "./build/cjs/vexflow.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/vexflow/vexflow.git"
+    "url": "https://github.com/mcqj/vexflow/vexflow.git"
   },
   "author": {
-    "name": "VexFlow Authors",
-    "email": "mohit@muthanna.com",
-    "url": "https://github.com/vexflow/vexflow/"
+    "name": "mcqj",
+    "email": "john.mcq1llan@gmail.com"
   },
   "license": "MIT",
   "files": [
@@ -47,10 +46,10 @@
     "url": "https://github.com/vexflow/vexflow/issues"
   },
   "devDependencies": {
-    "@eslint/compat": "^1.2.9",
-    "@eslint/eslintrc": "^3.3.1",
+    "@eslint/compat": "^2.1.1",
+    "@eslint/eslintrc": "^3.3.7",
     "@eslint/js": "^9.28.0",
-    "@types/node": "^22.15.30",
+    "@types/node": "^24.13.3",
     "@typescript-eslint/eslint-plugin": "^8.33.1",
     "@typescript-eslint/parser": "^8.33.1",
     "@vexflow-fonts/academico": "^1.0.1",
@@ -102,8 +101,8 @@
     "vitest": "^5.0.0"
   },
   "scripts": {
-    "start": "npm run dev",
-    "dev": "node tools/build.mjs watch",
+    "start": "vite --open /",
+    "dev": "vite",
     "build": "npm run clean && npm run lint && npm run build:cjs && npm run build:esm && npm run build:types",
     "build:cjs": "node tools/build.mjs cjs",
     "build:esm": "node tools/build.mjs esm",
@@ -118,7 +117,7 @@
     "generate:current": "node ./tools/generate_images.js build ./build/images/current",
     "generate:reference": "node ./tools/generate_images.js reference ./build/images/reference",
     "diff:reference": "./tools/visual_regression.sh reference",
-    "lint": "eslint --fix entry/**/*.ts src/**/*.ts tests/**/*.ts tests/formatter/*.js vite.config.mjs tools/build.mjs"
+    "lint": "eslint --no-warn-ignored entry/**/*.ts src/**/*.ts tests/**/*.ts tests/formatter/*.js vite.config.mjs tools/build.mjs"
   },
   "homepage": "https://vexflow.com/",
   "keywords": [
@@ -128,9 +127,6 @@
     "guitar",
     "tablature"
   ],
-  "dependencies": {
-    "structured-clone-es": "^1.0.0"
-  },
   "overrides": {
     "undici": "6.23.0"
   }

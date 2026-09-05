@@ -1,6 +1,6 @@
-import { VexFlowTests } from '../vexflow_test_helpers';
+import { VexFlowTests } from "../vexflow_test_helpers";
 
-import '../index';
+import "../index";
 
 export function runVitestJob(job: number): void {
   VexFlowTests.run({ jobs: 4, job });

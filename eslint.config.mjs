@@ -19,7 +19,7 @@ const compat = new FlatCompat({
 });
 
 export default [{
-    ignores: ["**/node_modules/", "tests/qunit/"],
+    ignores: ["**/node_modules/", "src/fonts/", "tests/qunit/"],
 }, {
     plugins: {
         "@typescript-eslint": typescriptEslint,

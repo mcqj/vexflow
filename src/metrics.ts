@@ -1,8 +1,7 @@
 // Copyright (c) 2023-present VexFlow contributors: https://github.com/vexflow/vexflow/graphs/contributors
 
-import { ElementStyle } from './element';
-import { FontInfo } from './font';
-import { structuredClone } from './util';
+import { ElementStyle } from "./element";
+import { FontInfo } from "./font";
 
 export class Metrics {
   protected static cacheStyle = new Map<string, ElementStyle>();
@@ -63,7 +62,7 @@ export class Metrics {
    */
   // eslint-disable-next-line
   static get(key: string, defaultValue?: any): any {
-    const keyParts = key.split('.');
+    const keyParts = key.split(".");
     const lastKeyPart = keyParts.pop()!; // Use ! because keyParts is not empty, since ''.split('.') still returns [''].
 
     // Start from root of CommonMetrics and go down as far as possible.
@@ -88,11 +87,11 @@ export class Metrics {
 // eslint-disable-next-line
 export const MetricsDefaults: Record<string, any> = {
   pointerRect: false,
-  fontFamily: 'Bravura,Academico',
+  fontFamily: "Bravura,Academico",
   fontSize: 30,
   fontScale: 1.0,
-  fontWeight: 'normal',
-  fontStyle: 'normal',
+  fontWeight: "normal",
+  fontStyle: "normal",
 
   Accidental: {
     cautionary: {
@@ -113,7 +112,7 @@ export const MetricsDefaults: Record<string, any> = {
   Bend: {
     fontSize: 10,
     line: {
-      strokeStyle: '#777777',
+      strokeStyle: "#777777",
       lineWidth: 1,
     },
   },
@@ -128,7 +127,7 @@ export const MetricsDefaults: Record<string, any> = {
 
   FretHandFinger: {
     fontSize: 9,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 
   GraceNote: {
@@ -146,14 +145,14 @@ export const MetricsDefaults: Record<string, any> = {
   PedalMarking: {
     text: {
       fontSize: 12,
-      fontStyle: 'italic',
+      fontStyle: "italic",
     },
   },
 
   Repetition: {
     text: {
       fontSize: 12,
-      fontWeight: 'bold',
+      fontWeight: "bold",
       offsetX: 12,
       offsetY: 25,
       spacing: 5,
@@ -167,7 +166,7 @@ export const MetricsDefaults: Record<string, any> = {
   },
 
   Stave: {
-    strokeStyle: '#999999',
+    strokeStyle: "#999999",
     fontSize: 8,
     padding: 12,
     endPaddingMax: 10,
@@ -191,10 +190,10 @@ export const MetricsDefaults: Record<string, any> = {
 
   StaveSection: {
     fontSize: 10,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     lineWidth: 2,
     padding: 2,
-    strokeStyle: 'black',
+    strokeStyle: "black",
   },
 
   StaveTempo: {
@@ -203,7 +202,7 @@ export const MetricsDefaults: Record<string, any> = {
       fontSize: 25,
     },
     name: {
-      fontWeight: 'bold',
+      fontWeight: "bold",
     },
   },
 
@@ -216,12 +215,12 @@ export const MetricsDefaults: Record<string, any> = {
   },
 
   Stem: {
-    strokeStyle: 'black',
+    strokeStyle: "black",
   },
 
   StringNumber: {
     fontSize: 10,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     verticalPadding: 8,
     stemPadding: 2,
     leftPadding: 5,
@@ -231,8 +230,8 @@ export const MetricsDefaults: Record<string, any> = {
   Stroke: {
     text: {
       fontSize: 10,
-      fontStyle: 'italic',
-      fontWeight: 'bold',
+      fontStyle: "italic",
+      fontWeight: "bold",
     },
   },
 
@@ -244,12 +243,12 @@ export const MetricsDefaults: Record<string, any> = {
 
   TabSlide: {
     fontSize: 10,
-    fontStyle: 'italic',
-    fontWeight: 'bold',
+    fontStyle: "italic",
+    fontWeight: "bold",
   },
 
   TabStave: {
-    strokeStyle: '#999999',
+    strokeStyle: "#999999",
     fontSize: 8,
   },
 
@@ -259,7 +258,7 @@ export const MetricsDefaults: Record<string, any> = {
 
   TextBracket: {
     fontSize: 15,
-    fontStyle: 'italic',
+    fontStyle: "italic",
   },
 
   TextNote: {
@@ -290,6 +289,6 @@ export const MetricsDefaults: Record<string, any> = {
 
   Volta: {
     fontSize: 9,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 };

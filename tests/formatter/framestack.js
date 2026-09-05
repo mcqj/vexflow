@@ -3,7 +3,7 @@ class FrameStack {
     this.parentEl = parentEl;
     this.numFrames = numFrames;
     this.options = {
-      prefix: 'vex-frame-',
+      prefix: "vex-frame-",
       width: 700,
       height: 800,
       iterationCallback: null,
@@ -13,16 +13,16 @@ class FrameStack {
     this.frames = [];
     this.currentFrame = 0;
 
-    document.getElementById(this.parentEl).innerHTML = '';
+    document.getElementById(this.parentEl).innerHTML = "";
     for (let i = 0; i < this.numFrames; i++) {
-      const div = document.createElement('div');
+      const div = document.createElement("div");
       div.id = this.frameID(i);
-      div.style.position = 'absolute';
+      div.style.position = "absolute";
       div.style.top = 0;
       div.style.left = 0;
       div.style.width = `${this.options.width}px`;
       div.style.height = `${this.options.height}px`;
-      div.style.display = 'none';
+      div.style.display = "none";
       this.frames[i] = div;
     }
   }
@@ -52,8 +52,8 @@ class FrameStack {
   }
 
   show(i) {
-    this.frames[this.currentFrame].style.display = 'none';
-    this.frames[i].style.display = 'block';
+    this.frames[this.currentFrame].style.display = "none";
+    this.frames[i].style.display = "block";
     this.currentFrame = i;
   }
 
@@ -66,7 +66,8 @@ class FrameStack {
     };
 
     this.animationTimer = setInterval(() => {
-      const frame = this.currentFrame + 1 === this.numFrames ? 0 : this.currentFrame + 1;
+      const frame =
+        this.currentFrame + 1 === this.numFrames ? 0 : this.currentFrame + 1;
       this.show(frame);
       if (this.options.iterationCallback) this.options.iterationCallback(frame);
     }, options.intervalms);
@@ -77,6 +78,6 @@ class FrameStack {
   }
 }
 
-if (typeof module != 'undefined') {
+if (typeof module != "undefined") {
   module.exports = { FrameStack };
 }

@@ -2,40 +2,43 @@
 // MIT License
 // @author Gregory Ristow (2015)
 
-import { Element } from './element';
-import { Font, FontInfo, FontStyle, FontWeight } from './font';
-import { Metrics } from './metrics';
-import { RenderContext, TextMeasure } from './rendercontext';
-import { Tables } from './tables';
-import { normalizeAngle, prefix, RuntimeError, structuredClone } from './util';
+import { Element } from "./element";
+import { Font, FontInfo, FontStyle, FontWeight } from "./font";
+import { Metrics } from "./metrics";
+import { RenderContext, TextMeasure } from "./rendercontext";
+import { Tables } from "./tables";
+import { normalizeAngle, prefix, RuntimeError } from "./util";
 
 export type Attributes = {
   [name: string]: string | number | undefined;
-  'font-family'?: string;
-  'font-size'?: string | number;
-  'font-style'?: string;
-  'font-weight'?: string | number;
+  "font-family"?: string;
+  "font-size"?: string | number;
+  "font-style"?: string;
+  "font-weight"?: string | number;
   scaleX?: number;
   scaleY?: number;
 };
 
 /** For a particular element type (e.g., rect), we will not apply certain presentation attributes. */
-const ATTRIBUTES_TO_IGNORE: Record<string /* element type */, Record<string, boolean> /* ignored attributes */> = {
+const ATTRIBUTES_TO_IGNORE: Record<
+  string /* element type */,
+  Record<string, boolean> /* ignored attributes */
+> = {
   path: {
     x: true,
     y: true,
     width: true,
     height: true,
-    'font-family': true,
-    'font-weight': true,
-    'font-style': true,
-    'font-size': true,
+    "font-family": true,
+    "font-weight": true,
+    "font-style": true,
+    "font-size": true,
   },
   rect: {
-    'font-family': true,
-    'font-weight': true,
-    'font-style': true,
-    'font-size': true,
+    "font-family": true,
+    "font-weight": true,
+    "font-style": true,
+    "font-size": true,
   },
   text: {
     width: true,
@@ -44,7 +47,7 @@ const ATTRIBUTES_TO_IGNORE: Record<string /* element type */, Record<string, boo
 };
 
 /** Create the SVG in the SVG namespace. */
-const SVG_NS = 'http://www.w3.org/2000/svg';
+const SVG_NS = "http://www.w3.org/2000/svg";
 
 const TWO_PI = 2 * Math.PI;
 
@@ -79,10 +82,10 @@ export class SVGContext extends RenderContext {
 
   protected precision = 1;
 
-  backgroundFillStyle: string = 'white';
+  backgroundFillStyle: string = "white";
 
   /** Formatted as CSS font shorthand (e.g., 'italic bold 12pt Arial') */
-  protected fontCSSString: string = '';
+  protected fontCSSString: string = "";
 
   constructor(element: HTMLElement) {
     super();
@@ -91,22 +94,22 @@ export class SVGContext extends RenderContext {
     this.precision = Math.pow(10, Tables.RENDER_PRECISION_PLACES);
 
     // Create an SVG element and add it to the container element.
-    const svg = this.create('svg');
-    svg.setAttribute('pointer-events', 'none');
+    const svg = this.create("svg");
+    svg.setAttribute("pointer-events", "none");
     this.element.appendChild(svg);
     this.svg = svg;
 
     this.parent = this.svg;
     this.groups = [this.svg];
 
-    this.path = '';
+    this.path = "";
     this.pen = { x: NaN, y: NaN };
 
     const defaultFontAttributes = {
-      'font-family': Metrics.get('fontFamily') as string,
-      'font-size': '10pt',
-      'font-weight': FontWeight.NORMAL,
-      'font-style': FontStyle.NORMAL,
+      "font-family": Metrics.get("fontFamily") as string,
+      "font-size": "10pt",
+      "font-weight": FontWeight.NORMAL,
+      "font-style": FontStyle.NORMAL,
     };
 
     this.state = {
@@ -116,12 +119,12 @@ export class SVGContext extends RenderContext {
     };
 
     this.attributes = {
-      'stroke-width': 1.0,
-      'stroke-dasharray': 'none',
-      fill: 'black',
-      stroke: 'black',
+      "stroke-width": 1.0,
+      "stroke-dasharray": "none",
+      fill: "black",
+      stroke: "black",
       shadowBlur: 0,
-      shadowColor: 'black',
+      shadowColor: "black",
       ...defaultFontAttributes,
     };
 
@@ -142,11 +145,11 @@ export class SVGContext extends RenderContext {
    * implementation signature.
    * Feel free to add new overloads for other SVG element types as required.
    */
-  create(svgElementType: 'g'): SVGGElement;
-  create(svgElementType: 'path'): SVGPathElement;
-  create(svgElementType: 'rect'): SVGRectElement;
-  create(svgElementType: 'svg'): SVGSVGElement;
-  create(svgElementType: 'text'): SVGTextElement;
+  create(svgElementType: "g"): SVGGElement;
+  create(svgElementType: "path"): SVGPathElement;
+  create(svgElementType: "rect"): SVGRectElement;
+  create(svgElementType: "svg"): SVGSVGElement;
+  create(svgElementType: "text"): SVGTextElement;
   create(svgElementType: string): SVGElement;
   create(svgElementType: string): SVGElement {
     return document.createElementNS(SVG_NS, svgElementType);
@@ -154,15 +157,18 @@ export class SVGContext extends RenderContext {
 
   // Allow grouping elements in containers for interactivity.
   openGroup(cls?: string, id?: string): SVGGElement {
-    const group = this.create('g');
+    const group = this.create("g");
     this.groups.push(group);
     this.parent.appendChild(group);
     this.parent = group;
-    if (cls) group.setAttribute('class', prefix(cls));
-    if (id) group.setAttribute('id', prefix(id));
+    if (cls) group.setAttribute("class", prefix(cls));
+    if (id) group.setAttribute("id", prefix(id));
 
     this.applyAttributes(group, this.attributes);
-    this.groupAttributes.push({ ...this.groupAttributes[this.groupAttributes.length - 1], ...this.attributes });
+    this.groupAttributes.push({
+      ...this.groupAttributes[this.groupAttributes.length - 1],
+      ...this.attributes,
+    });
     return group;
   }
 
@@ -173,7 +179,10 @@ export class SVGContext extends RenderContext {
   }
 
   openRotation(angleDegrees: number, x: number, y: number) {
-    this.openGroup().setAttribute('transform', `translate(${x},${y}) rotate(${angleDegrees}) translate(-${x},-${y})`);
+    this.openGroup().setAttribute(
+      "transform",
+      `translate(${x},${y}) rotate(${angleDegrees}) translate(-${x},-${y})`,
+    );
   }
 
   closeRotation() {
@@ -223,7 +232,7 @@ export class SVGContext extends RenderContext {
    * @returns this
    */
   setLineWidth(width: number): this {
-    this.attributes['stroke-width'] = width;
+    this.attributes["stroke-width"] = width;
     return this;
   }
 
@@ -234,11 +243,14 @@ export class SVGContext extends RenderContext {
    * See: [SVG `stroke-dasharray` attribute](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray)
    */
   setLineDash(lineDash: number[]): this {
-    if (Object.prototype.toString.call(lineDash) === '[object Array]') {
-      this.attributes['stroke-dasharray'] = lineDash.join(',');
+    if (Object.prototype.toString.call(lineDash) === "[object Array]") {
+      this.attributes["stroke-dasharray"] = lineDash.join(",");
       return this;
     } else {
-      throw new RuntimeError('ArgumentError', 'lineDash must be an array of integers.');
+      throw new RuntimeError(
+        "ArgumentError",
+        "lineDash must be an array of integers.",
+      );
     }
   }
 
@@ -247,7 +259,7 @@ export class SVGContext extends RenderContext {
    * @returns this
    */
   setLineCap(capType: CanvasLineCap): this {
-    this.attributes['stroke-linecap'] = capType;
+    this.attributes["stroke-linecap"] = capType;
     return this;
   }
 
@@ -301,12 +313,18 @@ export class SVGContext extends RenderContext {
    * 1 arg: string in the "x y w h" format
    * 4 args: x:number, y:number, w:number, h:number
    */
-  setViewBox(viewBoxOrMinX: string | number, minY?: number, width?: number, height?: number): void {
-    if (typeof viewBoxOrMinX === 'string') {
-      this.svg.setAttribute('viewBox', viewBoxOrMinX);
+  setViewBox(
+    viewBoxOrMinX: string | number,
+    minY?: number,
+    width?: number,
+    height?: number,
+  ): void {
+    if (typeof viewBoxOrMinX === "string") {
+      this.svg.setAttribute("viewBox", viewBoxOrMinX);
     } else {
-      const viewBoxString = viewBoxOrMinX + ' ' + minY + ' ' + width + ' ' + height;
-      this.svg.setAttribute('viewBox', viewBoxString);
+      const viewBoxString =
+        viewBoxOrMinX + " " + minY + " " + width + " " + height;
+      this.svg.setAttribute("viewBox", viewBoxString);
     }
   }
 
@@ -321,7 +339,8 @@ export class SVGContext extends RenderContext {
       if (
         attributes[attrName] &&
         (this.groupAttributes.length === 0 ||
-          attributes[attrName] != this.groupAttributes[this.groupAttributes.length - 1][attrName])
+          attributes[attrName] !=
+            this.groupAttributes[this.groupAttributes.length - 1][attrName])
       )
         element.setAttributeNS(null, attrName, attributes[attrName] as string);
     }
@@ -348,15 +367,25 @@ export class SVGContext extends RenderContext {
   }
 
   // ## Rectangles:
-  rect(x: number, y: number, width: number, height: number, attributes?: Attributes): this {
+  rect(
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    attributes?: Attributes,
+  ): this {
     // Avoid invalid negative height attributes by flipping the rectangle on its head:
     if (height < 0) {
       y += height;
       height *= -1;
     }
 
-    const rectangle = this.create('rect');
-    attributes = attributes ?? { fill: 'none', 'stroke-width': this.attributes['stroke-width'], stroke: 'black' };
+    const rectangle = this.create("rect");
+    attributes = attributes ?? {
+      fill: "none",
+      "stroke-width": this.attributes["stroke-width"],
+      stroke: "black",
+    };
     x = this.round(x);
     y = this.round(y);
     width = this.round(width);
@@ -367,13 +396,13 @@ export class SVGContext extends RenderContext {
   }
 
   fillRect(x: number, y: number, width: number, height: number): this {
-    const attributes = { fill: this.attributes.fill, stroke: 'none' };
+    const attributes = { fill: this.attributes.fill, stroke: "none" };
     this.rect(x, y, width, height, attributes);
     return this;
   }
 
   pointerRect(x: number, y: number, width: number, height: number): this {
-    const attributes = { opacity: '0', 'pointer-events': 'auto' };
+    const attributes = { opacity: "0", "pointer-events": "auto" };
     this.rect(x, y, width, height, attributes);
     return this;
   }
@@ -385,14 +414,17 @@ export class SVGContext extends RenderContext {
     // Since tabNote seems to be the only module that makes use of this
     // it may be worth creating a separate tabStave that would
     // draw lines around locations of tablature fingering.
-    this.rect(x, y, width, height, { fill: this.backgroundFillStyle, stroke: 'none' });
+    this.rect(x, y, width, height, {
+      fill: this.backgroundFillStyle,
+      stroke: "none",
+    });
     return this;
   }
 
   // ## Paths:
 
   beginPath(): this {
-    this.path = '';
+    this.path = "";
     this.pen.x = NaN;
     this.pen.y = NaN;
     return this;
@@ -401,7 +433,7 @@ export class SVGContext extends RenderContext {
   moveTo(x: number, y: number): this {
     x = this.round(x);
     y = this.round(y);
-    this.path += 'M' + x + ' ' + y;
+    this.path += "M" + x + " " + y;
     this.pen.x = x;
     this.pen.y = y;
     return this;
@@ -410,20 +442,27 @@ export class SVGContext extends RenderContext {
   lineTo(x: number, y: number): this {
     x = this.round(x);
     y = this.round(y);
-    this.path += 'L' + x + ' ' + y;
+    this.path += "L" + x + " " + y;
     this.pen.x = x;
     this.pen.y = y;
     return this;
   }
 
-  bezierCurveTo(x1: number, y1: number, x2: number, y2: number, x: number, y: number): this {
+  bezierCurveTo(
+    x1: number,
+    y1: number,
+    x2: number,
+    y2: number,
+    x: number,
+    y: number,
+  ): this {
     x = this.round(x);
     y = this.round(y);
     x1 = this.round(x1);
     y1 = this.round(y1);
     x2 = this.round(x2);
     y2 = this.round(y2);
-    this.path += 'C' + x1 + ' ' + y1 + ',' + x2 + ' ' + y2 + ',' + x + ' ' + y;
+    this.path += "C" + x1 + " " + y1 + "," + x2 + " " + y2 + "," + x + " " + y;
     this.pen.x = x;
     this.pen.y = y;
     return this;
@@ -434,13 +473,20 @@ export class SVGContext extends RenderContext {
     y = this.round(y);
     x1 = this.round(x1);
     y1 = this.round(y1);
-    this.path += 'Q' + x1 + ' ' + y1 + ',' + x + ' ' + y;
+    this.path += "Q" + x1 + " " + y1 + "," + x + " " + y;
     this.pen.x = x;
     this.pen.y = y;
     return this;
   }
 
-  arc(x: number, y: number, radius: number, startAngle: number, endAngle: number, counterclockwise: boolean): this {
+  arc(
+    x: number,
+    y: number,
+    radius: number,
+    startAngle: number,
+    endAngle: number,
+    counterclockwise: boolean,
+  ): this {
     let x0 = x + radius * Math.cos(startAngle);
     let y0 = y + radius * Math.sin(startAngle);
     x0 = this.round(x0);
@@ -495,7 +541,7 @@ export class SVGContext extends RenderContext {
   }
 
   closePath(): this {
-    this.path += 'Z';
+    this.path += "Z";
     return this;
   }
 
@@ -507,9 +553,9 @@ export class SVGContext extends RenderContext {
   }
 
   fill(attributes?: Attributes): this {
-    const path = this.create('path');
-    if (typeof attributes === 'undefined') {
-      attributes = { ...this.attributes, stroke: 'none' };
+    const path = this.create("path");
+    if (typeof attributes === "undefined") {
+      attributes = { ...this.attributes, stroke: "none" };
     }
 
     attributes.d = this.path;
@@ -523,10 +569,10 @@ export class SVGContext extends RenderContext {
   }
 
   stroke(): this {
-    const path = this.create('path');
+    const path = this.create("path");
     const attributes: Attributes = {
       ...this.attributes,
-      fill: 'none',
+      fill: "none",
       d: this.path,
     };
     if ((this.attributes.shadowBlur as number) > 0) {
@@ -542,10 +588,10 @@ export class SVGContext extends RenderContext {
   measureText(text: string): TextMeasure {
     SVGContext.measureTextElement.setText(text);
     SVGContext.measureTextElement.setFont(
-      this.attributes['font-family'],
-      this.attributes['font-size'],
-      this.attributes['font-weight'],
-      this.attributes['font-style']
+      this.attributes["font-family"],
+      this.attributes["font-size"],
+      this.attributes["font-weight"],
+      this.attributes["font-style"],
     );
     const bb = SVGContext.measureTextElement.getBoundingBox();
     return { x: bb.x, y: bb.y, width: bb.w, height: bb.h };
@@ -559,12 +605,12 @@ export class SVGContext extends RenderContext {
     y = this.round(y);
     const attributes: Attributes = {
       ...this.attributes,
-      stroke: 'none',
+      stroke: "none",
       x,
       y,
     };
 
-    const txt = this.create('text');
+    const txt = this.create("text");
     txt.textContent = text;
     this.applyAttributes(txt, attributes);
     this.add(txt);
@@ -615,14 +661,19 @@ export class SVGContext extends RenderContext {
    * @param style is a string (e.g., 'italic', 'normal') that is inserted into the
    *              font-style attribute (e.g., font-style="italic")
    */
-  setFont(f?: string | FontInfo, size?: string | number, weight?: string | number, style?: string): this {
+  setFont(
+    f?: string | FontInfo,
+    size?: string | number,
+    weight?: string | number,
+    style?: string,
+  ): this {
     const fontInfo = Font.validate(f, size, weight, style);
     this.fontCSSString = Font.toCSSString(fontInfo);
     const fontAttributes = {
-      'font-family': fontInfo.family,
-      'font-size': fontInfo.size,
-      'font-weight': fontInfo.weight,
-      'font-style': fontInfo.style,
+      "font-family": fontInfo.family,
+      "font-size": fontInfo.size,
+      "font-weight": fontInfo.weight,
+      "font-style": fontInfo.style,
     };
     this.attributes = { ...this.attributes, ...fontAttributes };
     this.state = { ...this.state, ...fontAttributes };

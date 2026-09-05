@@ -9,8 +9,8 @@
 //
 // The Vite config produces a minified production build from this entry point.
 
-import { VexFlow } from '../src/vexflow';
+import { VexFlow } from "../src/vexflow";
 
-VexFlow.BUILD.INFO = 'vexflow-core';
-export * from '../src/index';
+VexFlow.BUILD.INFO = "vexflow-core";
+export * from "../src/index";
 export default VexFlow;
