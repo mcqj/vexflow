@@ -17,7 +17,7 @@ import { TickContext } from '../src/tickcontext';
 
 const BendTests = {
   Start(): void {
-    QUnit.module('Bend');
+    VexFlowTests.module('Bend');
     const run = VexFlowTests.runTests;
     run('Double Bends', doubleBends);
     run('Reverse Bends', reverseBends);

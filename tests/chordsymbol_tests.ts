@@ -16,7 +16,7 @@ import { StaveNote } from '../src/stavenote';
 
 const ChordSymbolTests = {
   Start(): void {
-    QUnit.module('ChordSymbol');
+    VexFlowTests.module('ChordSymbol');
     const run = VexFlowTests.runTests;
     run('Bounding Box', withModifiers, { drawBoundingBox: true });
     run('Chord Symbol With Modifiers', withModifiers, { drawBoundingBox: false });

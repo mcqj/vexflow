@@ -13,7 +13,7 @@ import { StemmableNote } from '../src/stemmablenote';
 
 const StaveTieTests = {
   Start(): void {
-    QUnit.module('StaveTie');
+    VexFlowTests.module('StaveTie');
     const run = VexFlowTests.runTests;
     run('Simple StaveTie', simple);
     run('Chord StaveTie', chord);

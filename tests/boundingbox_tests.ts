@@ -9,9 +9,9 @@ import { BoundingBox } from '../src/index';
 
 const BoundingBoxTests = {
   Start(): void {
-    QUnit.module('BoundingBox');
-    QUnit.test('Initialization Test', initialization);
-    QUnit.test('Merging Text', merging);
+    VexFlowTests.module('BoundingBox');
+    VexFlowTests.test('Initialization Test', initialization);
+    VexFlowTests.test('Merging Text', merging);
   },
 };
 

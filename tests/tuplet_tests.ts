@@ -13,7 +13,7 @@ import { Tuplet } from '../src/tuplet';
 
 const TupletTests = {
   Start(): void {
-    QUnit.module('Tuplet');
+    VexFlowTests.module('Tuplet');
     const run = VexFlowTests.runTests;
     run('Bounding Box Above', aboveBounding);
     run('Bounding Box Below', belowBounding);

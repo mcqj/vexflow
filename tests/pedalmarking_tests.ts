@@ -13,7 +13,7 @@ import { Tickable } from '../src/tickable';
 
 const PedalMarkingTests = {
   Start(): void {
-    QUnit.module('PedalMarking');
+    VexFlowTests.module('PedalMarking');
 
     const run = VexFlowTests.runTests;
     run('Simple Pedal 1', simple1);

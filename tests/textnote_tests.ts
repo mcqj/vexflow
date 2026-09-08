@@ -13,7 +13,7 @@ import { TextNote } from '../src/textnote';
 
 const TextNoteTests = {
   Start(): void {
-    QUnit.module('TextNote');
+    VexFlowTests.module('TextNote');
     const run = VexFlowTests.runTests;
     run('TextNote Formatting', formatTextNotes);
     run('TextNote Formatting 2', formatTextNotes2);

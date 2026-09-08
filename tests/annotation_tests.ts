@@ -31,7 +31,7 @@ import { Voice } from '../src/voice';
 
 const AnnotationTests = {
   Start(): void {
-    QUnit.module('Annotation');
+    VexFlowTests.module('Annotation');
     const run = VexFlowTests.runTests;
     run('Bounding Box', placement, { drawBoundingBox: true });
     run('Placement', placement, { drawBoundingBox: false });

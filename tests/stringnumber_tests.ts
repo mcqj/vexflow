@@ -14,7 +14,7 @@ import { Stroke } from '../src/strokes';
 
 const StringNumberTests = {
   Start(): void {
-    QUnit.module('StringNumber');
+    VexFlowTests.module('StringNumber');
 
     const run = VexFlowTests.runTests;
     run('String Number In Notation', drawMultipleMeasures);

@@ -11,9 +11,9 @@ import { MockTickable } from './mocks';
 
 const TickContextTests = {
   Start(): void {
-    QUnit.module('TickContext');
-    QUnit.test('Current Tick Test', currentTick);
-    QUnit.test('Tracking Test', tracking);
+    VexFlowTests.module('TickContext');
+    VexFlowTests.test('Current Tick Test', currentTick);
+    VexFlowTests.test('Tracking Test', tracking);
   },
 };
 

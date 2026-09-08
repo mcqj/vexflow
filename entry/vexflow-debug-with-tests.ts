@@ -7,16 +7,16 @@
 // This file is based on vexflow.ts. The Vite config produces an unminified build
 // from this entry point.
 //
-// The output file is used by flow.html & flow-headless-browser.html to run the tests.
+// The output file is used by flow.html to run the tests.
 //
 // It bundles the same fonts as vexflow.js.
 // Other music/text fonts need to be loaded at runtime during page load. See VexFlow.loadFonts().
 
+// import * as VexSrc from '../src/index';
+// import * as VexTests from '../tests/index';
 import { VexFlow } from "../src/vexflow";
 import { VexFlowTests } from "../tests/vexflow_test_helpers";
 
-// import * as VexSrc from '../src/index';
-// import * as VexTests from '../tests/index';
 import { Font } from "../src/font";
 import { Academico } from "../src/fonts/academico";
 import { AcademicoBold } from "../src/fonts/academicobold";
@@ -24,6 +24,11 @@ import { Bravura } from "../src/fonts/bravura";
 import { Gonville } from "../src/fonts/gonville";
 import { Petaluma } from "../src/fonts/petaluma";
 import { PetalumaScript } from "../src/fonts/petalumascript";
+import {
+  completeBrowserTests,
+  installBrowserTestRunner,
+} from "../tests/browser_test_runner";
+import { installNodeTestRunner } from "../tests/node_test_runner";
 
 // Our convention is to use display: 'swap' for text fonts, and 'block' for music fonts.
 const block = { display: "block" };
@@ -37,21 +42,17 @@ const fontGonville = Font.load("Gonville", Gonville, block);
 const fontPetaluma = Font.load("Petaluma", Petaluma, block);
 const fontPetalumaScript = Font.load("Petaluma Script", PetalumaScript, swap);
 
-const fontLoadPromises = [
+const fontsReady = Promise.allSettled([
   fontBravura,
   fontAcademico,
   fontAcademicoBold,
   fontGonville,
   fontPetaluma,
   fontPetalumaScript,
-];
+]);
 
 VexFlow.BUILD.INFO = "vexflow-debug-with-tests";
 VexFlow.setFonts("Bravura", "Academico");
-
-Promise.allSettled(fontLoadPromises).then(() => {
-  //
-});
 
 export * from "../src/index";
 export * from "../tests/index";
@@ -61,4 +62,16 @@ export * from "../tests/index";
 // eslint-disable-next-line
 // @ts-ignore
 VexFlow.Test = VexFlowTests;
+// eslint-disable-next-line
+// @ts-ignore
+VexFlow.Test.installBrowserTestRunner = installBrowserTestRunner;
+// eslint-disable-next-line
+// @ts-ignore
+VexFlow.Test.completeBrowserTests = completeBrowserTests;
+// eslint-disable-next-line
+// @ts-ignore
+VexFlow.Test.installNodeTestRunner = installNodeTestRunner;
+// eslint-disable-next-line
+// @ts-ignore
+VexFlow.Test.fontsReady = fontsReady;
 export default VexFlow;

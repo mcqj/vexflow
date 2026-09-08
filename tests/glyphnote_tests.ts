@@ -14,7 +14,7 @@ import { Voice } from '../src/voice';
 
 const GlyphNoteTests = {
   Start(): void {
-    QUnit.module('GlyphNote');
+    VexFlowTests.module('GlyphNote');
     const run = VexFlowTests.runTests;
     run('GlyphNote with ChordSymbols', chordChanges, { debug: false, noPadding: false });
     run('Bounding Box', chordChanges, { debug: false, noPadding: false, drawBoundingBox: true });

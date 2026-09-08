@@ -7,7 +7,7 @@ import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const UnisonTests = {
   Start(): void {
-    QUnit.module('Unison');
+    VexFlowTests.module('Unison');
     const run = VexFlowTests.runTests;
     run('Simple(true)', simple, { unison: true, voice1: 'e4/q, e4/q, e4/h', voice2: 'e4/8, e4/8, e4/q, e4/h' });
     run('Simple(false)', simple, { unison: false, voice1: 'e4/q, e4/q, e4/h', voice2: 'e4/8, e4/8, e4/q, e4/h' });

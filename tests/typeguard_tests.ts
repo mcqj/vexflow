@@ -17,11 +17,11 @@ import { isCategory, isNote, isRenderContext, isStaveNote, isStemmableNote, isTa
 
 const TypeGuardTests = {
   Start(): void {
-    QUnit.module('TypeGuard');
-    QUnit.test('Real VexFlow Types', real);
-    QUnit.test('Fake VexFlow Types in ES5', fakeES5);
-    QUnit.test('Fake VexFlow Types in ES6', fakeES6);
-    QUnit.test('Edge Case ES5/ES6', edgeCaseES5vsES6);
+    VexFlowTests.module('TypeGuard');
+    VexFlowTests.test('Real VexFlow Types', real);
+    VexFlowTests.test('Fake VexFlow Types in ES5', fakeES5);
+    VexFlowTests.test('Fake VexFlow Types in ES6', fakeES6);
+    VexFlowTests.test('Edge Case ES5/ES6', edgeCaseES5vsES6);
   },
 };
 

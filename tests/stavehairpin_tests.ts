@@ -12,7 +12,7 @@ import { StaveNote } from '../src/stavenote';
 
 const StaveHairpinTests = {
   Start(): void {
-    QUnit.module('StaveHairpin');
+    VexFlowTests.module('StaveHairpin');
     const run = VexFlowTests.runTests;
     run('Simple StaveHairpin', simple);
     run('Horizontal Offset StaveHairpin', horizontal);

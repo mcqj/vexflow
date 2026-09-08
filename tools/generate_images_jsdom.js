@@ -65,53 +65,6 @@ if (argv.length >= 5) {
   }
 }
 
-// When generating PNG images for the visual regression tests,
-// we mock out the QUnit methods (since we don't care about assertions).
-if (!global.QUnit) {
-  const QUMock = {
-    moduleName: '',
-    testName: '',
-
-    assertions: {
-      ok: () => true,
-      equal: () => true,
-      deepEqual: () => true,
-      expect: () => true,
-      throws: () => true,
-      notOk: () => true,
-      notEqual: () => true,
-      notDeepEqual: () => true,
-      strictEqual: () => true,
-      notStrictEqual: () => true,
-      propEqual: () => true,
-    },
-
-    module(name) {
-      QUMock.moduleName = name;
-    },
-
-    // See: https://api.qunitjs.com/QUnit/test/
-    test(testName, callback) {
-      QUMock.testName = testName;
-      QUMock.assertions.test.module.name = QUMock.moduleName;
-      // Print out the progress and keep it on a single line.
-      process.stdout.write(`\u001B[0G${QUMock.moduleName} :: ${testName}\u001B[0K`);
-      callback(QUMock.assertions);
-    },
-  };
-
-  // QUNIT MOCK
-  global.QUnit = QUMock;
-  for (const k in QUMock.assertions) {
-    // Make all methods & properties of QUMock.assertions global.
-    global[k] = QUMock.assertions[k];
-  }
-  global.test = QUMock.test;
-  // Enable us to pass the name of the module around.
-  // See: QUMock.test(...) and VexFlowTests.runWithParams(...)
-  QUMock.assertions.test = { module: { name: '' } };
-}
-
 // vexflow-debug-with-tests.js includes both the VexFlow library and the test code.
 const vexflowDebugWithTestsJS = path.resolve(__dirname, path.join(scriptDir, 'cjs', 'vexflow-debug-with-tests.js'));
 if (!fs.existsSync(vexflowDebugWithTestsJS)) {
@@ -126,6 +79,7 @@ global.VexFlow.Test.shims = { fs };
 
 // Tell VexFlow that we're outside the browser. Just run the Node tests.
 const VFT = VexFlow.Test;
+VFT.installNodeTestRunner();
 VFT.RUN_CANVAS_TESTS = false;
 VFT.RUN_SVG_TESTS = false;
 VFT.RUN_NODE_TESTS = true;

@@ -16,9 +16,9 @@ import { MockTickable } from './mocks';
 
 const VoiceTests = {
   Start(): void {
-    QUnit.module('Voice');
-    QUnit.test('Strict Test', strict);
-    QUnit.test('Ignore Test', ignore);
+    VexFlowTests.module('Voice');
+    VexFlowTests.test('Strict Test', strict);
+    VexFlowTests.test('Ignore Test', ignore);
     VexFlowTests.runTests('Full Voice Mode Test', full);
   },
 };

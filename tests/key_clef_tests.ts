@@ -14,7 +14,7 @@ import { Stave } from '../src/stave';
 
 const ClefKeySignatureTests = {
   Start(): void {
-    QUnit.module('Clef Keys');
+    VexFlowTests.module('Clef Keys');
     // Removed an identical 'Key Parser Test'. See keysignature_tests.ts.
     const run = VexFlowTests.runTests;
     run('Major Key Clef Test', keys, { majorKeys: true });

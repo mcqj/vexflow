@@ -7,7 +7,7 @@ import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const ClefTests = {
   Start(): void {
-    QUnit.module('Clef');
+    VexFlowTests.module('Clef');
     const run = VexFlowTests.runTests;
     run('Bounding Box', draw, { drawBoundingBox: true });
     run('Bounding Box Clef Change', drawClefChange, { drawBoundingBox: true });

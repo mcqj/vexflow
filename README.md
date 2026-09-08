@@ -80,13 +80,22 @@ Run Vitest in watch mode while developing:
 npm run test:watch
 ```
 
-Browser-based visual regression images are generated with Playwright. Install its Chromium browser once after installing dependencies:
+Run source-rendered browser visual regression tests with Playwright. Install its Chromium browser once after installing dependencies:
 
 ```sh
 npx playwright install chromium
+npm run test:visual
 ```
 
-Build VexFlow, then generate images with the Playwright backend:
+Update committed visual baselines deliberately after reviewing an intentional rendering change:
+
+```sh
+npm run test:visual:update
+```
+
+Playwright stores failure artifacts in `build/playwright-artifacts/`. The committed snapshots are macOS Chromium baselines, and CI runs the visual suite on macOS to match them.
+
+The legacy reference-image workflow generates images with the Playwright backend:
 
 ```sh
 npm run build:cjs

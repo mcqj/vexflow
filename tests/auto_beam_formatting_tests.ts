@@ -17,7 +17,7 @@ import { StemmableNote } from '../src/stemmablenote';
 
 const AutoBeamFormattingTests = {
   Start(): void {
-    QUnit.module('Auto-Beaming');
+    VexFlowTests.module('Auto-Beaming');
     const run = VexFlowTests.runTests;
     run('Simple Auto Beaming', simpleAuto);
     run('Auto Beaming With Overflow Group', simpleAutoWithOverflowGroup);

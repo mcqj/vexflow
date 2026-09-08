@@ -29,7 +29,7 @@ import { TimeSignature } from '../src/timesignature';
 
 const StyleTests = {
   Start(): void {
-    QUnit.module('Style');
+    VexFlowTests.module('Style');
     const run = VexFlowTests.runTests;
     run('Basic Style', stave);
     run('TabNote modifiers Style', tab);

@@ -20,7 +20,7 @@ import { StaveNote, StaveNoteStruct } from '../src/stavenote';
 
 const GraceNoteTests = {
   Start(): void {
-    QUnit.module('Grace Notes');
+    VexFlowTests.module('Grace Notes');
     const run = VexFlowTests.runTests;
     run('Grace Note Basic', basic);
     run('With Articulation and Annotation on Parent Note', graceNoteModifiers);

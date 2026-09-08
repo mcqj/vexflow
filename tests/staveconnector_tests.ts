@@ -16,7 +16,7 @@ import { StaveConnector } from '../src/staveconnector';
 
 const StaveConnectorTests = {
   Start(): void {
-    QUnit.module('StaveConnector');
+    VexFlowTests.module('StaveConnector');
     const run = VexFlowTests.runTests;
     run('Single Draw Test', drawSingle);
     run('Single Draw Test, 4px Stave Line Thickness', drawSingle4pxStaveLines);

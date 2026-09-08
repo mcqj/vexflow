@@ -18,10 +18,10 @@ import { Voice } from '../src/voice';
 
 const FontTests = {
   Start(): void {
-    QUnit.module('Font');
-    QUnit.test('setFont', setFont);
-    QUnit.test('Parsing', fontParsing);
-    QUnit.test('Sizes', fontSizes);
+    VexFlowTests.module('Font');
+    VexFlowTests.test('setFont', setFont);
+    VexFlowTests.test('Parsing', fontParsing);
+    VexFlowTests.test('Sizes', fontSizes);
     const run = VexFlowTests.runTests;
     run('Set Text Font to Georgia', setTextFontToGeorgia);
     run('Set Music Font to Petaluma', setMusicFontToPetaluma);

@@ -31,16 +31,16 @@ import { TickContext } from '../src/tickcontext';
 
 const StaveNoteTests = {
   Start(): void {
-    QUnit.module('StaveNote');
-    QUnit.test('Tick', ticks);
-    QUnit.test('Tick - New API', ticksNewAPI);
-    QUnit.test('Stem', stem);
-    QUnit.test('Automatic Stem Direction', autoStem);
-    QUnit.test('Stem Extension Pitch', stemExtensionPitch);
-    QUnit.test('Displacement after calling setStemDirection', setStemDirectionDisplacement);
-    QUnit.test('StaveLine', staveLine);
-    QUnit.test('Width', width);
-    QUnit.test('TickContext', tickContext);
+    VexFlowTests.module('StaveNote');
+    VexFlowTests.test('Tick', ticks);
+    VexFlowTests.test('Tick - New API', ticksNewAPI);
+    VexFlowTests.test('Stem', stem);
+    VexFlowTests.test('Automatic Stem Direction', autoStem);
+    VexFlowTests.test('Stem Extension Pitch', stemExtensionPitch);
+    VexFlowTests.test('Displacement after calling setStemDirection', setStemDirectionDisplacement);
+    VexFlowTests.test('StaveLine', staveLine);
+    VexFlowTests.test('Width', width);
+    VexFlowTests.test('TickContext', tickContext);
 
     const run = VexFlowTests.runTests;
     run('StaveNote Draw - Treble', drawBasic, { clef: 'treble', octaveShift: 0, restKey: 'r/4' });

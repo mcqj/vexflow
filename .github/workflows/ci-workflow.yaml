@@ -20,3 +20,23 @@ jobs:
       - run: npm install
       - run: npm run lint
       - run: npm test
+
+  visual:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js 24.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 24.x
+      - run: npm install
+      - run: npx playwright install chromium
+      - run: npm run test:visual
+      - name: Upload Playwright artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-artifacts
+          path: build/playwright-artifacts
+          if-no-files-found: ignore

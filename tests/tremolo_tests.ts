@@ -10,7 +10,7 @@ import { Tremolo } from '../src/tremolo';
 
 const TremoloTests = {
   Start(): void {
-    QUnit.module('Tremolo');
+    VexFlowTests.module('Tremolo');
     const run = VexFlowTests.runTests;
     run('Tremolo - Basic', tremoloBasic);
   },

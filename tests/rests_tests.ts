@@ -18,7 +18,7 @@ import { Voice } from '../src/voice';
 
 const RestsTests = {
   Start(): void {
-    QUnit.module('Rests');
+    VexFlowTests.module('Rests');
     const run = VexFlowTests.runTests;
     run('Outside Stave', ledgerRest);
     run('Dotted', basic);

@@ -19,7 +19,7 @@ import { Voice } from '../src/voice';
 
 const DotTests = {
   Start(): void {
-    QUnit.module('Dot');
+    VexFlowTests.module('Dot');
     const run = VexFlowTests.runTests;
     run('Basic', basic);
     run('Multi Voice', multiVoice);

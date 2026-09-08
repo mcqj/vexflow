@@ -86,9 +86,9 @@ import {
 
 const VFPrefixTests = {
   Start(): void {
-    QUnit.module('VF.* API');
-    QUnit.test('VF.* API', VFPrefix);
-    QUnit.test('VF Alias', VFAlias);
+    VexFlowTests.module('VF.* API');
+    VexFlowTests.test('VF.* API', VFPrefix);
+    VexFlowTests.test('VF Alias', VFAlias);
   },
 };
 

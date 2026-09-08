@@ -24,7 +24,7 @@ import { Metrics } from '../src/metrics';
 
 const BeamTests = {
   Start(): void {
-    QUnit.module('Beam');
+    VexFlowTests.module('Beam');
     const run = VexFlowTests.runTests;
     run('Simple Beam', simple);
     run('Multi Beam', multi);

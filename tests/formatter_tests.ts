@@ -64,9 +64,9 @@ function getTestVoices(): Voice[] {
 
 const FormatterTests = {
   Start(): void {
-    QUnit.module('Formatter');
-    QUnit.test('getResolutionMultiplier', getResolutionMultiplier);
-    QUnit.test('TickContext Building', buildTickContexts);
+    VexFlowTests.module('Formatter');
+    VexFlowTests.test('getResolutionMultiplier', getResolutionMultiplier);
+    VexFlowTests.test('TickContext Building', buildTickContexts);
 
     const run = VexFlowTests.runTests;
     run('Penultimate Note Padding', penultimateNote);

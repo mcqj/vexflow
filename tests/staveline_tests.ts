@@ -11,7 +11,7 @@ import { Metrics } from '../src/metrics';
 
 const StaveLineTests = {
   Start(): void {
-    QUnit.module('StaveLine');
+    VexFlowTests.module('StaveLine');
     const run = VexFlowTests.runTests;
     run('Simple StaveLine', simple0);
     run('StaveLine Arrow Options', simple1);

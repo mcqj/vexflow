@@ -25,8 +25,8 @@ import { Voice } from '../src/voice';
 
 const AccidentalTests = {
   Start(): void {
-    QUnit.module('Accidental');
-    QUnit.test('Automatic Accidentals - Simple Tests', autoAccidentalWorking);
+    VexFlowTests.module('Accidental');
+    VexFlowTests.test('Automatic Accidentals - Simple Tests', autoAccidentalWorking);
     const run = VexFlowTests.runTests;
     run('Bounding Box', basic, { drawBoundingBox: true });
     run('Accidental Padding', formatAccidentalSpaces);

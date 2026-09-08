@@ -14,7 +14,7 @@ import { Voice } from '../src/voice';
 const ThreeVoicesTests = {
   Start(): void {
     // TODO: Rename the module to 'Three Voices', because we aren't really testing rests.
-    QUnit.module('Three Voice Rests');
+    VexFlowTests.module('Three Voice Rests');
 
     const run = VexFlowTests.runTests;
     run('Three Voices - #1', threeVoices1);

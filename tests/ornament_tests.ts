@@ -23,7 +23,7 @@ import { Voice, VoiceMode } from '../src/voice';
 
 const OrnamentTests = {
   Start(): void {
-    QUnit.module('Ornament');
+    VexFlowTests.module('Ornament');
     const run = VexFlowTests.runTests;
     run('Ornaments', drawOrnaments);
     run('Ornaments Vertically Shifted', drawOrnamentsDisplaced);

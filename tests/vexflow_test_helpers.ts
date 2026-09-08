@@ -7,6 +7,7 @@ import { ContextBuilder, Element, Factory, RenderContext, Renderer, VexFlow } fr
 
 import { Metrics } from '../src/metrics';
 import { globalObject } from '../src/util';
+import { TestAssert, TestMetadata, TestRunner } from './test_runner';
 
 // eslint-disable-next-line
 declare const $: any;
@@ -16,7 +17,7 @@ const global = globalObject();
 export interface TestOptions {
   elementId: string;
   params: any /* eslint-disable-line */;
-  assert: Assert;
+  assert: TestAssert;
   backend: number;
 
   // Some tests use this field to pass around the ContextBuilder function.
@@ -156,6 +157,14 @@ interface Test {
 export class VexFlowTests {
   static tests: Test[] = [];
 
+  static module(name: string): void {
+    TestRunner.module(name);
+  }
+
+  static test(name: string, callback: (assert: TestAssert) => void | Promise<void>): void {
+    TestRunner.test(name, (assert) => callback(assert));
+  }
+
   // Call this at the end of a `tests/xxxx_tests.ts` file to register the module.
   static register(test: Test): void {
     VexFlowTests.tests.push(test);
@@ -240,7 +249,7 @@ export class VexFlowTests {
   }
 
   /**
-   * Run `func` inside a QUnit test for each of the enabled rendering backends.
+  * Run `func` inside a registered test for each of the enabled rendering backends.
    * @param name
    * @param testFunc
    * @param params
@@ -321,19 +330,14 @@ export class VexFlowTests {
    * @param fontName
    * @param element
    */
-  static runNodeTestHelper(fontName: string, element: HTMLElement): void {
+  static runNodeTestHelper(fontName: string, element: HTMLElement, metadata: TestMetadata): void {
     if (Renderer.lastContext !== undefined) {
-      // See QUNIT MOCK in generate_images_jsdom.js
       const fileName =
         VexFlowTests.NODE_IMAGEDIR +
         '/' +
-        // eslint-disable-next-line
-        // @ts-ignore
-        sanitize(QUnit.moduleName) +
+        sanitize(metadata.moduleName) +
         '.' +
-        // eslint-disable-next-line
-        // @ts-ignore
-        sanitize(QUnit.testName) +
+        sanitize(metadata.testName) +
         '.' +
         sanitize(fontName) +
         '.jsdom.png';
@@ -345,7 +349,7 @@ export class VexFlowTests {
     }
   }
 
-  /** Run QUnit.test(...) for each font. */
+  /** Run a test for each font. */
   // eslint-disable-next-line
   static runWithParams({ fontStacks, testFunc, name, params, backend, tagName, testType, helper }: any): void {
     if (name === undefined) {
@@ -353,12 +357,11 @@ export class VexFlowTests {
     }
     const testTypeLowerCase = testType.toLowerCase();
     fontStacks.forEach((fontStackName: string) => {
-      // eslint-disable-next-line
-      QUnit.test(name, (assert: any) => {
+      TestRunner.test(name, (assert, metadata) => {
         useTempFontStack(fontStackName);
         const sanitizedFontStackName = sanitize(fontStackName);
         const elementId = VexFlowTests.generateTestID(`${testTypeLowerCase}_` + sanitizedFontStackName);
-        const moduleName = assert.test.module.name;
+        const { moduleName } = metadata;
         const title = moduleName + ' › ' + name + ` › ${testType} + ${fontStackName}`;
 
         // Add an element id for the title div, so that we can scroll directly to a test case.
@@ -373,7 +376,7 @@ export class VexFlowTests {
         const contextBuilder: ContextBuilder = isSVG ? Renderer.getSVGContext : Renderer.getCanvasContext;
         testFunc(options, contextBuilder);
         restoreOriginalFontStack();
-        if (helper) helper(fontStackName, element);
+        if (helper) helper(fontStackName, element, metadata);
       });
     });
   }
