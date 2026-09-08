@@ -4,7 +4,8 @@ export async function loadSourceTestModule(
   page: Page,
   moduleName: string,
 ): Promise<void> {
-  await page.goto(`/tests/flow.html?source=true&module=${moduleName}`);
+  const params = new URLSearchParams({ source: "true", module: moduleName });
+  await page.goto(`/tests/flow.html?${params}`);
   await expect(page.locator("#qunit-testresult")).toContainText(
     "completed in",
     { timeout: 60_000 },

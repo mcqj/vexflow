@@ -27,32 +27,40 @@ function recordAssertion(result: boolean, message: string): void {
   if (!result) results.failures.push(message);
 }
 
-function createAssert(metadata: TestMetadata): TestAssert {
+interface BrowserAssert {
+  assert: TestAssert;
+  validateExpectedAssertions(): void;
+}
+
+function createAssert(metadata: TestMetadata): BrowserAssert {
+  let expectedAssertions: number | undefined;
+  let assertionCount = 0;
+  const record = (result: boolean, message: string): void => {
+    assertionCount += 1;
+    recordAssertion(result, message);
+  };
   const compare = (actual: unknown, expected: unknown, message: string | undefined, strict: boolean): void => {
     const matches = strict ? Object.is(actual, expected) : actual == expected;
-    recordAssertion(matches, message ?? `${metadata.moduleName} > ${metadata.testName}: expected values to match.`);
+    record(matches, message ?? `${metadata.moduleName} > ${metadata.testName}: expected values to match.`);
   };
-
-  let expectedAssertions: number | undefined;
-  const initialAssertions = results.assertions;
   return {
+    assert: {
     test: { module: { name: metadata.moduleName } },
     deepEqual: (actual, expected, message) =>
-      recordAssertion(valuesAreEqual(actual, expected), message ?? `${metadata.moduleName} > ${metadata.testName}: expected values to be deeply equal.`),
+      record(valuesAreEqual(actual, expected), message ?? `${metadata.moduleName} > ${metadata.testName}: expected values to be deeply equal.`),
     equal: (actual, expected, message) => compare(actual, expected, message, false),
     expect: (count) => {
       expectedAssertions = count;
     },
     notDeepEqual: (actual, expected, message) =>
-      recordAssertion(!valuesAreEqual(actual, expected), message ?? `${metadata.moduleName} > ${metadata.testName}: expected values to differ.`),
-    notEqual: (actual, expected, message) =>
-      recordAssertion(actual != expected, message ?? `${metadata.moduleName} > ${metadata.testName}: expected values to differ.`),
-    notOk: (value, message) => recordAssertion(!value, message ?? `${metadata.moduleName} > ${metadata.testName}: expected a falsy value.`),
+      record(!valuesAreEqual(actual, expected), message ?? `${metadata.moduleName} > ${metadata.testName}: expected values to differ.`),
+    notEqual: (actual, expected, message) => record(actual != expected, message ?? `${metadata.moduleName} > ${metadata.testName}: expected values to differ.`),
+    notOk: (value, message) => record(!value, message ?? `${metadata.moduleName} > ${metadata.testName}: expected a falsy value.`),
     notStrictEqual: (actual, expected, message) =>
-      recordAssertion(!Object.is(actual, expected), message ?? `${metadata.moduleName} > ${metadata.testName}: expected values to differ.`),
-    ok: (value, message) => recordAssertion(!!value, message ?? `${metadata.moduleName} > ${metadata.testName}: expected a truthy value.`),
+      record(!Object.is(actual, expected), message ?? `${metadata.moduleName} > ${metadata.testName}: expected values to differ.`),
+    ok: (value, message) => record(!!value, message ?? `${metadata.moduleName} > ${metadata.testName}: expected a truthy value.`),
     propEqual: (actual, expected, message) =>
-      recordAssertion(valuesAreEqual(actual, expected), message ?? `${metadata.moduleName} > ${metadata.testName}: expected properties to match.`),
+      record(valuesAreEqual(actual, expected), message ?? `${metadata.moduleName} > ${metadata.testName}: expected properties to match.`),
     strictEqual: (actual, expected, message) => compare(actual, expected, message, true),
     throws: (callback, expected, message) => {
       let thrown: unknown;
@@ -67,7 +75,16 @@ function createAssert(metadata: TestMetadata): TestAssert {
           typeof expected === "string" ||
           (expected instanceof RegExp && expected.test(String(thrown))) ||
           (typeof expected === "function" && thrown instanceof expected));
-      recordAssertion(matches, message ?? `${metadata.moduleName} > ${metadata.testName}: expected callback to throw.`);
+      record(matches, message ?? `${metadata.moduleName} > ${metadata.testName}: expected callback to throw.`);
+    },
+    },
+    validateExpectedAssertions: () => {
+      if (expectedAssertions !== undefined) {
+        record(
+          assertionCount === expectedAssertions,
+          `${metadata.moduleName} > ${metadata.testName}: expected ${expectedAssertions} assertions, but received ${assertionCount}.`,
+        );
+      }
     },
   };
 }
@@ -87,10 +104,11 @@ const browserBackend: TestRunnerBackend = {
     if (!matchesFilter(metadata)) return;
 
     results.tests += 1;
-    const assert = createAssert(metadata);
+    const browserAssert = createAssert(metadata);
     const runTest = async (): Promise<void> => {
       try {
-        await callback(assert, metadata);
+        await callback(browserAssert.assert, metadata);
+        browserAssert.validateExpectedAssertions();
       } catch (error) {
         results.failures.push(`${metadata.moduleName} > ${metadata.testName}: ${String(error)}`);
       }
