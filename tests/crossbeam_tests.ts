@@ -25,7 +25,7 @@ interface crossStaveBeamTest {
 }
 const CrossBeamTests = {
   Start(): void {
-    QUnit.module('CrossBeam');
+    VexFlowTests.module('CrossBeam');
 
     const run = VexFlowTests.runTests;
     const crossStaveTests: crossStaveBeamTest[] = [];

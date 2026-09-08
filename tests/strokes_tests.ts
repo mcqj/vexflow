@@ -9,7 +9,7 @@ import { Barline, Beam, Bend, Category, GraceNote, GraceNoteStruct, StemmableNot
 
 const StrokesTests = {
   Start(): void {
-    QUnit.module('Strokes');
+    VexFlowTests.module('Strokes');
     const run = VexFlowTests.runTests;
 
     run('Brush/Roll/Rasgueado', brushRollRasgueado, { drawBoundingBox: false });

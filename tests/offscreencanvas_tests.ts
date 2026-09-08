@@ -19,8 +19,8 @@ const OffscreenCanvasTests = {
       return;
     }
 
-    QUnit.module('OffscreenCanvas');
-    QUnit.test('Simple Test', simpleTest);
+    VexFlowTests.module('OffscreenCanvas');
+    VexFlowTests.test('Simple Test', simpleTest);
   },
 };
 

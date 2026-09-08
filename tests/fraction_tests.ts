@@ -12,9 +12,9 @@ import { Fraction } from '../src/fraction';
 
 const FractionTests = {
   Start(): void {
-    QUnit.module('Fraction');
-    QUnit.test('Basic', basic);
-    QUnit.test('With Other Fractions', withOtherFractions);
+    VexFlowTests.module('Fraction');
+    VexFlowTests.test('Basic', basic);
+    VexFlowTests.test('With Other Fractions', withOtherFractions);
   },
 };
 

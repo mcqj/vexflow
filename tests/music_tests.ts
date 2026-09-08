@@ -10,17 +10,17 @@ import { Music } from '../src/music';
 
 const MusicTests = {
   Start(): void {
-    QUnit.module('MusicTests');
-    QUnit.test('Valid Notes', validNotes);
-    QUnit.test('Valid Keys', validKeys);
-    QUnit.test('Note Values', noteValue);
-    QUnit.test('Interval Values', intervalValue);
-    QUnit.test('Relative Notes', relativeNotes);
-    QUnit.test('Relative Note Names', relativeNoteNames);
-    QUnit.test('Canonical Notes', canonicalNotes);
-    QUnit.test('Canonical Intervals', canonicalIntervals);
-    QUnit.test('Scale Tones', scaleTones);
-    QUnit.test('Scale Intervals', scaleIntervals);
+    VexFlowTests.module('MusicTests');
+    VexFlowTests.test('Valid Notes', validNotes);
+    VexFlowTests.test('Valid Keys', validKeys);
+    VexFlowTests.test('Note Values', noteValue);
+    VexFlowTests.test('Interval Values', intervalValue);
+    VexFlowTests.test('Relative Notes', relativeNotes);
+    VexFlowTests.test('Relative Note Names', relativeNoteNames);
+    VexFlowTests.test('Canonical Notes', canonicalNotes);
+    VexFlowTests.test('Canonical Intervals', canonicalIntervals);
+    VexFlowTests.test('Scale Tones', scaleTones);
+    VexFlowTests.test('Scale Intervals', scaleIntervals);
   },
 };
 

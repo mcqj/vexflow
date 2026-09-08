@@ -9,10 +9,10 @@ import { Tuning } from '../src/tuning';
 
 const TuningTests = {
   Start(): void {
-    QUnit.module('Tuning');
-    QUnit.test('Standard Tuning', standard);
-    QUnit.test('Standard Banjo Tuning', banjo);
-    QUnit.test('Return note for fret', noteForFret);
+    VexFlowTests.module('Tuning');
+    VexFlowTests.test('Standard Tuning', standard);
+    VexFlowTests.test('Standard Banjo Tuning', banjo);
+    VexFlowTests.test('Return note for fret', noteForFret);
   },
 };
 

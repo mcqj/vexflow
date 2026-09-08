@@ -12,9 +12,9 @@ import { KeyManager } from '../src/index';
 
 const KeyManagerTests = {
   Start(): void {
-    QUnit.module('KeyManager');
-    QUnit.test('Valid Notes', works);
-    QUnit.test('Select Notes', selectNotes);
+    VexFlowTests.module('KeyManager');
+    VexFlowTests.test('Valid Notes', works);
+    VexFlowTests.test('Select Notes', selectNotes);
   },
 };
 

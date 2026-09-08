@@ -10,7 +10,7 @@ import { TabStave } from '../src/tabstave';
 
 const TabStaveTests = {
   Start(): void {
-    QUnit.module('TabStave');
+    VexFlowTests.module('TabStave');
     const run = VexFlowTests.runTests;
     run('TabStave Draw Test', draw);
   },

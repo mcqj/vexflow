@@ -19,11 +19,11 @@ import { Voice, VoiceMode } from '../src/voice';
 
 const TabNoteTests = {
   Start(): void {
-    QUnit.module('TabNote');
+    VexFlowTests.module('TabNote');
 
-    QUnit.test('Tick', ticks);
-    QUnit.test('TabStave Line', tabStaveLine);
-    QUnit.test('Width', width);
+    VexFlowTests.test('Tick', ticks);
+    VexFlowTests.test('TabStave Line', tabStaveLine);
+    VexFlowTests.test('Width', width);
 
     const run = VexFlowTests.runTests;
     run('TabNote Draw', draw);

@@ -12,7 +12,7 @@ import { StemmableNote } from '../src/stemmablenote';
 
 const CurveTests = {
   Start(): void {
-    QUnit.module('Curve');
+    VexFlowTests.module('Curve');
     const run = VexFlowTests.runTests;
     run('Simple Curve', simple);
     run('Opening Direction - up', openingDirUp);

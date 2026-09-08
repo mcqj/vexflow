@@ -17,7 +17,7 @@ import { Voice } from '../src/voice';
 
 const GraceTabNoteTests = {
   Start(): void {
-    QUnit.module('Grace Tab Notes');
+    VexFlowTests.module('Grace Tab Notes');
     // TODO: Rename tests below since it is redundant with the module name.
     // Remove "Grace Tab Note "
     const run = VexFlowTests.runTests;

@@ -22,7 +22,7 @@ import { Voice } from '../src/voice';
 
 const NoteHeadTests = {
   Start(): void {
-    QUnit.module('NoteHead');
+    VexFlowTests.module('NoteHead');
     const run = VexFlowTests.runTests;
     run('Basic', basic);
     run('Various Note Heads 1', variousNoteHeads);

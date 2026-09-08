@@ -28,8 +28,8 @@ import { TimeSignature } from '../src/timesignature';
 
 const StaveTests = {
   Start(): void {
-    QUnit.module('Stave');
-    QUnit.test('StaveModifiers SortByCategory', sortByCategory);
+    VexFlowTests.module('Stave');
+    VexFlowTests.test('StaveModifiers SortByCategory', sortByCategory);
     const run = VexFlowTests.runTests;
     run('Stave Draw Test', draw);
     run('Open Stave Draw Test', drawOpenStave);

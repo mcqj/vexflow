@@ -15,7 +15,7 @@ import { StaveNote } from '../src/stavenote';
 
 const RhythmTests = {
   Start(): void {
-    QUnit.module('Rhythm');
+    VexFlowTests.module('Rhythm');
     const run = VexFlowTests.runTests;
     // TODO: Simplify test names by removing 'Rhythm Draw - '.
     run('Rhythm Draw - slash notes', drawBasic);

@@ -17,7 +17,7 @@ import { Voice } from '../src/voice';
 
 const TabSlideTests = {
   Start(): void {
-    QUnit.module('TabSlide');
+    VexFlowTests.module('TabSlide');
     const run = VexFlowTests.runTests;
     run('Simple TabSlide', simple);
     run('Slide Up', slideUp);

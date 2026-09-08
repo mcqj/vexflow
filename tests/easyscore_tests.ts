@@ -16,14 +16,14 @@ import { Tuplet } from '../src/tuplet';
 
 const EasyScoreTests = {
   Start(): void {
-    QUnit.module('EasyScore');
-    QUnit.test('Basic', basic);
-    QUnit.test('Accidentals', accidentals);
-    QUnit.test('Durations', durations);
-    QUnit.test('Chords', chords);
-    QUnit.test('Dots', dots);
-    QUnit.test('Types', types);
-    QUnit.test('Options', options);
+    VexFlowTests.module('EasyScore');
+    VexFlowTests.test('Basic', basic);
+    VexFlowTests.test('Accidentals', accidentals);
+    VexFlowTests.test('Durations', durations);
+    VexFlowTests.test('Chords', chords);
+    VexFlowTests.test('Dots', dots);
+    VexFlowTests.test('Types', types);
+    VexFlowTests.test('Options', options);
     const run = VexFlowTests.runTests;
     run('Draw Basic', drawBasicTest);
     run('Draw Different KeySignature', drawDiffKeysig);

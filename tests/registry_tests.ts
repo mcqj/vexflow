@@ -9,10 +9,10 @@ import { EasyScore, Element, Factory, Registry, StaveNote } from '../src/index';
 
 const RegistryTests = {
   Start(): void {
-    QUnit.module('Registry');
-    QUnit.test('Register and Clear', registerAndClear);
-    QUnit.test('Default Registry', defaultRegistry);
-    QUnit.test('Multiple Classes', classes);
+    VexFlowTests.module('Registry');
+    VexFlowTests.test('Register and Clear', registerAndClear);
+    VexFlowTests.test('Default Registry', defaultRegistry);
+    VexFlowTests.test('Multiple Classes', classes);
   },
 };
 

@@ -12,7 +12,7 @@ import { StemmableNote } from '../src/stemmablenote';
 
 const GhostNoteTests = {
   Start(): void {
-    QUnit.module('GhostNote');
+    VexFlowTests.module('GhostNote');
     const run = VexFlowTests.runTests;
     run('GhostNote Basic', basic);
     run('GhostNote Dotted', dotted);

@@ -9,11 +9,11 @@ import { Grammar, Parser, Result, RuleFunction } from '../src/parser';
 
 const ParserTests = {
   Start(): void {
-    QUnit.module('Parser');
-    QUnit.test('Basic', basic);
-    QUnit.test('Advanced', advanced);
-    QUnit.test('Mixed', mixed);
-    QUnit.test('Micro Score', microscore);
+    VexFlowTests.module('Parser');
+    VexFlowTests.test('Basic', basic);
+    VexFlowTests.test('Advanced', advanced);
+    VexFlowTests.test('Mixed', mixed);
+    VexFlowTests.test('Micro Score', microscore);
   },
 };
 

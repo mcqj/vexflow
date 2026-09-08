@@ -9,9 +9,9 @@ import { Modifier, ModifierContext } from '../src/index';
 
 const ModifierContextTests = {
   Start(): void {
-    QUnit.module('ModifierContext');
-    QUnit.test('Modifier Width Test', width);
-    QUnit.test('Modifier Management', management);
+    VexFlowTests.module('ModifierContext');
+    VexFlowTests.test('Modifier Width Test', width);
+    VexFlowTests.test('Modifier Management', management);
   },
 };
 

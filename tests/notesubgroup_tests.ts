@@ -14,7 +14,7 @@ import { StaveNote, StaveNoteStruct } from '../src/stavenote';
 
 const NoteSubGroupTests = {
   Start(): void {
-    QUnit.module('NoteSubGroup');
+    VexFlowTests.module('NoteSubGroup');
     const run = VexFlowTests.runTests;
     run('Basic - ClefNote, TimeSigNote and BarNote', basic);
     run('Multi Voice', multiVoiceSingleDraw);

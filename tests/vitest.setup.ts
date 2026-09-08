@@ -1,34 +1,8 @@
 import { expect, test } from 'vitest';
 
-type TestCallback = (assert: Assert) => void | Promise<void>;
+import { TestAssert, TestCallback, TestRunner, TestRunnerBackend } from './test_runner';
 
-interface QUnitAdapter {
-  moduleName: string;
-  testName: string;
-  module(name: string): void;
-  test(name: string, callback: TestCallback): void;
-}
-
-declare global {
-  interface Assert {
-    test: { module: { name: string } };
-    deepEqual(actual: unknown, expected: unknown, message?: string): void;
-    equal(actual: unknown, expected: unknown, message?: string): void;
-    expect(assertions: number): void;
-    notDeepEqual(actual: unknown, expected: unknown, message?: string): void;
-    notEqual(actual: unknown, expected: unknown, message?: string): void;
-    notOk(value: unknown, message?: string): void;
-    notStrictEqual(actual: unknown, expected: unknown, message?: string): void;
-    ok(value: unknown, message?: string): void;
-    propEqual(actual: unknown, expected: unknown, message?: string): void;
-    strictEqual(actual: unknown, expected: unknown, message?: string): void;
-    throws(callback: () => unknown, expected?: RegExp | (new (...args: never[]) => Error) | string, message?: string): void;
-  }
-
-  const QUnit: QUnitAdapter;
-}
-
-function createAssert(moduleName: string): Assert {
+function createAssert(moduleName: string): TestAssert {
   return {
     test: { module: { name: moduleName } },
     deepEqual: (actual, expected) => expect(actual).toEqual(expected),
@@ -50,23 +24,18 @@ function createAssert(moduleName: string): Assert {
 
 let currentModule = '';
 
-const qunit: QUnitAdapter = {
-  moduleName: '',
-  testName: '',
+const vitestBackend: TestRunnerBackend = {
   module(name) {
     currentModule = name;
-    this.moduleName = name;
   },
   test(name, callback) {
     const moduleName = currentModule;
     test(`${moduleName} > ${name}`, async () => {
-      this.moduleName = moduleName;
-      this.testName = name;
-      await callback(createAssert(moduleName));
+      await callback(createAssert(moduleName), { moduleName, testName: name });
     });
   },
 };
 
-(globalThis as typeof globalThis & { QUnit: QUnitAdapter }).QUnit = qunit;
+TestRunner.install(vitestBackend);
 
 document.body.innerHTML = '<div id="qunit-tests"></div>';

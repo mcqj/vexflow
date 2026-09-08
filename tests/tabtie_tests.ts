@@ -20,7 +20,7 @@ import { Voice } from '../src/voice';
 
 const TabTieTests = {
   Start(): void {
-    QUnit.module('TabTie');
+    VexFlowTests.module('TabTie');
     const run = VexFlowTests.runTests;
     run('Simple TabTie', simple);
     run('Hammerons', simpleHammerOn);

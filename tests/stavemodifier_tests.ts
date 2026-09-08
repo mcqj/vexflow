@@ -12,7 +12,7 @@ import { StaveModifierPosition } from '../src/stavemodifier';
 
 const StaveModifierTests = {
   Start(): void {
-    QUnit.module('StaveModifier');
+    VexFlowTests.module('StaveModifier');
     const run = VexFlowTests.runTests;
     run('Stave Draw Test', draw);
     run('Begin & End StaveModifier Test', drawBeginAndEnd);

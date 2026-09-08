@@ -27,7 +27,7 @@ import { Metrics } from '../src/metrics';
 
 const PercussionTests = {
   Start(): void {
-    QUnit.module('Percussion');
+    VexFlowTests.module('Percussion');
     const run = VexFlowTests.runTests;
     run('Percussion Clef', draw);
     run('Percussion Notes', drawNotes);

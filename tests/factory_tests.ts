@@ -10,8 +10,8 @@ import { Barline } from '../src/stavebarline';
 
 const FactoryTests = {
   Start(): void {
-    QUnit.module('Factory');
-    QUnit.test('Defaults', defaults);
+    VexFlowTests.module('Factory');
+    VexFlowTests.test('Defaults', defaults);
     const run = VexFlowTests.runTests;
     run('Draw', draw);
     run('Draw Tab (repeat barlines must be aligned)', drawTab);

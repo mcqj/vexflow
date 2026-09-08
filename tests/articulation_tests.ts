@@ -23,7 +23,7 @@ import { Voice } from '../src/voice';
 
 const ArticulationTests = {
   Start(): void {
-    QUnit.module('Articulation');
+    VexFlowTests.module('Articulation');
     const run = VexFlowTests.runTests;
     run('Bounding Box', verticalPlacement, { drawBoundingBox: true });
     run('Vertical Placement', verticalPlacement, { drawBoundingBox: false });

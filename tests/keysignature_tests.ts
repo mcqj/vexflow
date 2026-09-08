@@ -16,8 +16,8 @@ import { BarlineType } from '../src/stavebarline';
 
 const KeySignatureTests = {
   Start(): void {
-    QUnit.module('KeySignature');
-    QUnit.test('Key Parser Test', parser);
+    VexFlowTests.module('KeySignature');
+    VexFlowTests.test('Key Parser Test', parser);
     const run = VexFlowTests.runTests;
     run('Major Key Test', majorKeys);
     run('Minor Key Test', minorKeys);

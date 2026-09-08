@@ -9,7 +9,7 @@ import { BarlineType, Factory, Registry, StaveNote } from '../src/index';
 
 const DemoPetzoldTests = {
   Start(): void {
-    QUnit.module('Demo - Petzold');
+    VexFlowTests.module('Demo - Petzold');
     VexFlowTests.runTests('Minuet in G', minuetInG);
   },
 };

@@ -12,8 +12,8 @@ import { TimeSignature } from '../src/timesignature';
 
 const TimeSignatureTests = {
   Start(): void {
-    QUnit.module('TimeSignature');
-    QUnit.test('Time Signature Parser', parser);
+    VexFlowTests.module('TimeSignature');
+    VexFlowTests.test('Time Signature Parser', parser);
     const run = VexFlowTests.runTests;
     run('Basic Time Signatures', basic);
     run('Big Signature Test', big);

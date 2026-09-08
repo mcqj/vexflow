@@ -33,7 +33,7 @@ const USE_FACTORY = { useRendererAPI: false };
 
 const RendererTests = {
   Start(): void {
-    QUnit.module('Renderer');
+    VexFlowTests.module('Renderer');
     const run = VexFlowTests.runTests;
 
     // Randomly choose one of four setup paths. See below for a description.

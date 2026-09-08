@@ -12,7 +12,7 @@ import { MultimeasureRestRenderOptions } from '../src/multimeasurerest';
 
 const MultiMeasureRestTests = {
   Start(): void {
-    QUnit.module('MultiMeasureRest');
+    VexFlowTests.module('MultiMeasureRest');
     const run = VexFlowTests.runTests;
     run('Simple Test', simple);
     run('Stave with modifiers Test', staveWithModifiers);

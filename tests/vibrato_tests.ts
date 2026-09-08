@@ -11,7 +11,7 @@ import { Metrics } from '../src/metrics';
 
 const VibratoTests = {
   Start(): void {
-    QUnit.module('Vibrato');
+    VexFlowTests.module('Vibrato');
     const run = VexFlowTests.runTests;
     run('Simple Vibrato', simple);
     run('Harsh Vibrato', harsh);

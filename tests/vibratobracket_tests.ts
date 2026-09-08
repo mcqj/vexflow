@@ -14,7 +14,7 @@ import { Tickable } from '../src/tickable';
 
 const VibratoBracketTests = {
   Start(): void {
-    QUnit.module('VibratoBracket');
+    VexFlowTests.module('VibratoBracket');
     const run = VexFlowTests.runTests;
     run('Simple VibratoBracket', simple);
     run('Harsh VibratoBracket Without End Note', withoutEndNote);

@@ -9,8 +9,8 @@ import { Barline, BarlineType } from '../src/stavebarline';
 
 const BarlineTests = {
   Start(): void {
-    QUnit.module('Barline');
-    QUnit.test('Enums', enums);
+    VexFlowTests.module('Barline');
+    VexFlowTests.test('Enums', enums);
     const run = VexFlowTests.runTests;
     run('Simple BarNotes', simple);
     run('Style BarNotes', style);
