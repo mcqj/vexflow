@@ -18,6 +18,10 @@ export interface TestAssert {
   throws(callback: () => unknown, expected?: RegExp | (new (...args: never[]) => Error) | string, message?: string): void;
 }
 
+declare global {
+  type Assert = TestAssert;
+}
+
 export type TestCallback = (assert: TestAssert, metadata: TestMetadata) => void | Promise<void>;
 
 export interface TestRunnerBackend {
