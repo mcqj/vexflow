@@ -20,7 +20,6 @@
 // See: https://github.com/microsoft/TypeScript/issues/16577#issuecomment-754941937
 
 // Limitations:
-// - Assume single quoted strings.
 // - Assume import(...) function uses only string literals.
 
 import * as fs from 'fs';
@@ -45,29 +44,26 @@ function fixImportsAndExports(filePath) {
 
   // Line by line regex replace!
   const lines = contents.split('\n');
-  const newLines = lines.map((line, index) => {
-    const specifier = line.match(/'([^']+)';$/)?.[1];
-    if (specifier && !specifier.startsWith('.')) {
+  const newLines = lines.map((line) => {
+    const match = line.match(/(['"])(\.[^'"]*)\1;?\s*$/);
+    const specifier = match?.[2];
+    if (!specifier) {
       return line;
     }
+    const quote = match[1];
+    const fixedSpecifier = specifier
+      .replace(/\.$/, './index')
+      .replace(/\/$/, '/index');
     if (line.startsWith('import ')) {
-      if (line.endsWith(`.js';`)) {
+      if (fixedSpecifier.endsWith('.js')) {
         return line;
       }
-      const fixedLine = line
-        .replace(/^import (.*?)\.';$/gm, "import $1./index';") // Ends with dot: import '.'; => import './index';
-        .replace(/^import (.*?)\/';$/gm, "import $1/index';") // Ends with slash: import './src/'; => import './src/index';
-        .replace(/^import (.*?)';$/gm, "import $1.js';"); // Normal case: import './file'; => import './file.js';
-      return fixedLine;
+      return line.replace(`${quote}${specifier}${quote}`, `${quote}${fixedSpecifier}.js${quote}`);
     } else if (line.startsWith('export ') && line.includes(' from ')) {
-      if (line.endsWith(`.js';`)) {
+      if (fixedSpecifier.endsWith('.js')) {
         return line;
       }
-      const fixedLine = line
-        .replace(/^export (.*?) from (.*?)\.';$/gm, "export $1 from $2./index';")
-        .replace(/^export (.*?) from (.*?)\/';$/gm, "export $1 from $2/index';")
-        .replace(/^export (.*?) from (.*?)';$/gm, "export $1 from $2.js';");
-      return fixedLine;
+      return line.replace(`${quote}${specifier}${quote}`, `${quote}${fixedSpecifier}.js${quote}`);
     } else {
       return line;
     }
