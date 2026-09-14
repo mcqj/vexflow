@@ -38,7 +38,7 @@
   "jsdelivr": "./build/cjs/vexflow.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mcqj/vexflow/vexflow.git"
+    "url": "https://github.com/mcqj/vexflow"
   },
   "files": [
     "build",
