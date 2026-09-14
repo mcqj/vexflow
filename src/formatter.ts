@@ -15,7 +15,7 @@ import { TabNote } from './tabnote';
 import { TabStave } from './tabstave';
 import { Tickable } from './tickable';
 import { TickContext } from './tickcontext';
-import { isNote, isStaveNote } from './typeguard';
+import { Category, isCategory, isNote, isStaveNote } from './typeguard';
 import { defined, log, midLine, RuntimeError, sumArray } from './util';
 import { Voice } from './voice';
 
@@ -559,7 +559,9 @@ export class Formatter {
         // Add this tickable to the TickContext.
 
         tickable.addToModifierContext(staveTickToContextMap![integerTicks]);
-        ticksUsed.add(tickable.getTicks());
+        if (!isCategory(tickable, Category.BarNote)) {
+          ticksUsed.add(tickable.getTicks());
+        }
       });
     });
 
@@ -613,7 +615,9 @@ export class Formatter {
         // Add this tickable to the TickContext.
         const tickContext: TickContext = tickToContextMap[integerTicks];
         tickContext.addTickable(tickable, voiceIndex);
-        ticksUsed.add(tickable.getTicks());
+        if (!isCategory(tickable, Category.BarNote)) {
+          ticksUsed.add(tickable.getTicks());
+        }
       });
     });
 

@@ -9,6 +9,7 @@ import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 import { Accidental } from '../src/accidental';
 import { Annotation, AnnotationVerticalJustify } from '../src/annotation';
 import { Articulation } from '../src/articulation';
+import { BarNote } from '../src/barnote';
 import { Beam } from '../src/beam';
 import { Bend } from '../src/bend';
 import { Dot } from '../src/dot';
@@ -16,6 +17,7 @@ import { Element } from '../src/element';
 import { FontWeight } from '../src/font';
 import { Formatter } from '../src/formatter';
 import { FretHandFinger } from '../src/frethandfinger';
+import { GhostNote } from '../src/ghostnote';
 import { Glyphs } from '../src/glyphs';
 import { Metrics } from '../src/metrics';
 import { ModifierPosition } from '../src/modifier';
@@ -28,6 +30,7 @@ import { Stem } from '../src/stem';
 import { StemmableNote } from '../src/stemmablenote';
 import { StringNumber } from '../src/stringnumber';
 import { System } from '../src/system';
+import { TextNote } from '../src/textnote';
 import type { Tickable } from '../src/tickable';
 import { Tuplet } from '../src/tuplet';
 import { Voice, VoiceTime } from '../src/voice';
@@ -86,6 +89,7 @@ const FormatterTests = {
     run('Tight', tightNotes1);
     run('Tight 2', tightNotes2);
     run('Annotations', annotations);
+    VexFlowTests.test('Ignored bar notes preserve lyric tick alignment', ignoredBarNotesPreserveLyricTickAlignment);
     run('Proportional Formatting - No Tuning', proportional, { debug: true, iterations: 0 });
     run('Proportional Formatting - No Justification', proportional, { justify: false, debug: true, iterations: 0 });
     run('Proportional Formatting (20 iterations)', proportional, { debug: true, iterations: 20, alpha: 0.5 });
@@ -97,6 +101,23 @@ function getGlyphWidth(glyph: string): number {
   const el = new Element();
   el.setText(glyph);
   return el.getWidth();
+}
+
+function ignoredBarNotesPreserveLyricTickAlignment(assert: Assert): void {
+  const musicNotes = Array.from({ length: 12 }, () => new StaveNote({ keys: ['c/4'], duration: '8' }));
+  const when = new TextNote({ text: 'When', duration: '8' });
+  const lyricNotes = [
+    ...Array.from({ length: 6 }, () => new GhostNote({ duration: '8' })),
+    new BarNote(),
+    when,
+    ...Array.from({ length: 5 }, () => new TextNote({ text: '', duration: '8' })),
+  ];
+  const musicVoice = new Voice({ numBeats: 6, beatValue: 4 }).addTickables(musicNotes);
+  const lyricVoice = new Voice({ numBeats: 6, beatValue: 4 }).addTickables(lyricNotes);
+
+  new Formatter().joinVoices([musicVoice, lyricVoice]).format([musicVoice, lyricVoice], 500);
+
+  assert.strictEqual(when.getTickContext(), musicNotes[6].getTickContext());
 }
 
 function getResolutionMultiplier(assert: Assert): void {
