@@ -3,7 +3,6 @@
 import { execSync } from 'child_process';
 import fs from 'fs';
 import path, { dirname } from 'path';
-import copy from 'recursive-copy';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -104,8 +103,8 @@ async function getReleasesForVersion3OrEarlier() {
     const targetDir = path.join(RELEASES_DIR, ver);
     // copy all files from sourceDir to targetDir.
     try {
-      const results = await copy(sourceDir, targetDir);
-      console.info('Copied ' + results.length + ' files to: ' + targetDir);
+      await fs.promises.cp(sourceDir, targetDir, { recursive: true });
+      console.info('Copied files to: ' + targetDir);
     } catch (error) {
       console.error('Copy failed: ' + error);
     }
@@ -146,8 +145,8 @@ async function getReleasesForVersion4OrLater() {
     const targetDir = path.join(RELEASES_DIR, ver);
     // copy all files from sourceDir to targetDir.
     try {
-      const results = await copy(sourceDir, targetDir);
-      console.info('Copied ' + results.length + ' files to: ' + targetDir);
+      await fs.promises.cp(sourceDir, targetDir, { recursive: true });
+      console.info('Copied files to: ' + targetDir);
     } catch (error) {
       console.error('Copy failed: ' + error);
     }

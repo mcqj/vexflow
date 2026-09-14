@@ -10,8 +10,6 @@
 // vexflow-bravura.js bundles Bravura, Academico, and AcademicoBold.
 const fs = require('fs');
 const path = require('path');
-const prettier = require('prettier');
-const prettierConfig = require('../../.prettierrc.js');
 
 // Load a *.woff2 file.
 const folder = path.resolve(__dirname, '../../node_modules/@vexflow-fonts/');
@@ -75,12 +73,6 @@ for (const fontName in fonts) {
 
   const output = `export const ${fontNameNoSpaces} = '${dataURIPrefix}${base64}';`;
 
-  // Use our prettier rules to format the output JSON file. See: .prettierrc.js
-  // That way, if we ever edit & save the file, the diff will be minimal.
-  // We use String.slice(0, -1) to remove the final newline character.
-  prettierConfig.parser = 'typescript';
-  prettier.format(output, prettierConfig).then((formatted) => {
-    console.log('Writing to file:', outFile);
-    fs.writeFileSync(outFile, formatted);
-  });
+  console.log('Writing to file:', outFile);
+  fs.writeFileSync(outFile, output + '\n');
 }

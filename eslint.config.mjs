@@ -1,97 +1,87 @@
 import typescriptEslint from "@typescript-eslint/eslint-plugin";
-import prettier from "eslint-plugin-prettier";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
-import _import from "eslint-plugin-import";
-import { fixupPluginRules } from "@eslint/compat";
+import { importX } from "eslint-plugin-import-x";
 import globals from "globals";
 import tsParser from "@typescript-eslint/parser";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
 import js from "@eslint/js";
-import { FlatCompat } from "@eslint/eslintrc";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const compat = new FlatCompat({
-    baseDirectory: __dirname,
-    recommendedConfig: js.configs.recommended,
-    allConfig: js.configs.all
-});
-
-export default [{
+export default [
+  {
     ignores: ["**/node_modules/", "src/fonts/", "tests/qunit/"],
-}, {
+  },
+  {
+    ...js.configs.recommended,
+    files: ["**/*.ts", "{demos,tools}/**/*.{js,cjs,mjs}", "*.config.mjs"],
+  },
+  {
     plugins: {
-        "@typescript-eslint": typescriptEslint,
-        prettier,
-        "simple-import-sort": simpleImportSort,
-        import: fixupPluginRules(_import),
+      "@typescript-eslint": typescriptEslint,
+      "simple-import-sort": simpleImportSort,
+      "import-x": importX,
     },
 
     languageOptions: {
-        globals: {
-            ...globals.browser,
-            ...globals.node,
-        },
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
 
-        parser: tsParser,
-        ecmaVersion: 5,
-        sourceType: "commonjs",
+      parser: tsParser,
+      ecmaVersion: 5,
+      sourceType: "commonjs",
 
-        parserOptions: {
-            project: ["./tsconfig.json", "./tsconfig.tools.json"],
-        },
+      parserOptions: {
+        project: ["./tsconfig.json", "./tsconfig.tools.json"],
+      },
     },
 
     rules: {
-        "no-console": "warn",
-        "prettier/prettier": "warn",
-        "simple-import-sort/imports": "warn",
-        "simple-import-sort/exports": "warn",
-        "import/first": "error",
-        "import/no-duplicates": "error",
-        "import/newline-after-import": "warn",
-        camelcase: "warn",
+      "no-console": "warn",
+      "simple-import-sort/imports": "warn",
+      "simple-import-sort/exports": "warn",
+      "import-x/first": "error",
+      "import-x/no-duplicates": "error",
+      "import-x/newline-after-import": "warn",
+      camelcase: "warn",
     },
-}, ...compat.extends(
-    "eslint:recommended",
-    "prettier",
-    "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended",
-).map(config => ({
+  },
+  ...typescriptEslint.configs["flat/recommended"].map((config) => ({
     ...config,
     files: ["**/*.ts"],
-})), {
+  })),
+  {
     files: ["**/*.ts"],
 
     rules: {
-        "@typescript-eslint/no-inferrable-types": "off",
+      "@typescript-eslint/no-inferrable-types": "off",
 
-        "simple-import-sort/imports": ["warn", {
-            groups: [
-                // Any import that starts with vex goes next.
-                ["^.*/vex.*$"],
-                // Imports of the index.ts file next.
-                ["^.*/index$"],
-                // The rest are just the defaults for the eslint-plugin-simple-import-sort plugin:
-                // Search for "default groups" here: https://github.com/lydell/eslint-plugin-simple-import-sort
-                ["^\\u0000"],
-                ["^@?\\w"],
-                ["^"],
-                ["^\\."]
-            ],
-        }],
+      "simple-import-sort/imports": [
+        "warn",
+        {
+          groups: [
+            // Any import that starts with vex goes next.
+            ["^.*/vex.*$"],
+            // Imports of the index.ts file next.
+            ["^.*/index$"],
+            // The rest are just the defaults for the eslint-plugin-simple-import-sort plugin:
+            // Search for "default groups" here: https://github.com/lydell/eslint-plugin-simple-import-sort
+            ["^\\u0000"],
+            ["^@?\\w"],
+            ["^"],
+            ["^\\."],
+          ],
+        },
+      ],
     },
-}, ...compat.extends("eslint:recommended", "prettier").map(config => ({
-    ...config,
-    files: ["{demos,tools}/**/*.{js,cjs,mjs}", "*.config.mjs"],
-})), {
+  },
+  {
     files: ["{demos,tools}/**/*.{js,cjs,mjs}", "*.config.mjs"],
 
     // Disable some eslint rules in build scripts and demos.
     rules: {
-        "no-console": "off",
-        "no-unused-vars": "off",
-        "no-undef": "off",
+      "no-console": "off",
+      "no-unused-vars": "off",
+      "no-undef": "off",
     },
-}];
+  },
+];
