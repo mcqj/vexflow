@@ -27,6 +27,7 @@ export interface TickContextOptions {
 export class TickContext {
   protected readonly tickID: number;
   protected readonly tickables: Tickable[];
+  protected readonly dependentTickables: Set<Tickable>;
   // because we do Object.keys(tickablesByVoice).forEach, the record has to be
   // typed as Record<string, Tickable>, but the key is actually a number.
   // TODO(msac): convert to a Map() object later, which allows numeric keys.
@@ -79,6 +80,7 @@ export class TickContext {
     this.xBase = 0; // base x position without xOffset
     this.xOffset = 0; // xBase and xOffset are an alternative way to describe x (x = xB + xO)
     this.tickables = []; // Notes, tabs, chords, lyrics.
+    this.dependentTickables = new Set();
     this.tickablesByVoice = {}; // Tickables indexed by voice number (as string)
 
     // Formatting metrics
@@ -215,12 +217,12 @@ export class TickContext {
     this.preFormatted = false;
   }
 
-  addTickable(tickable: Tickable, voiceIndex?: number): this {
+  addTickable(tickable: Tickable, voiceIndex?: number, dependent = false): this {
     if (!tickable) {
       throw new RuntimeError('BadArgument', 'Invalid tickable added.');
     }
 
-    if (!tickable.shouldIgnoreTicks()) {
+    if (!dependent && !tickable.shouldIgnoreTicks()) {
       const ticks = tickable.getTicks();
 
       if (ticks.greaterThan(this.maxTicks)) {
@@ -239,6 +241,7 @@ export class TickContext {
 
     tickable.setTickContext(this);
     this.tickables.push(tickable);
+    if (dependent) this.dependentTickables.add(tickable);
     this.tickablesByVoice[voiceIndex ?? 0] = tickable;
     this.preFormatted = false;
     return this;
@@ -250,6 +253,7 @@ export class TickContext {
     for (let i = 0; i < this.tickables.length; ++i) {
       const tickable = this.tickables[i];
       tickable.preFormat();
+      if (this.dependentTickables.has(tickable)) continue;
       const metrics = tickable.getMetrics();
 
       // Maintain max displaced head pixels from all tickables in the context

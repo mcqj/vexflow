@@ -1,6 +1,6 @@
 {
   "name": "@mcqj/vexflow",
-  "version": "0.0.1-alpha.4",
+  "version": "0.0.1-alpha.7",
   "description": "A JavaScript library for rendering music notation and guitar tablature.",
   "author": {
     "name": "mcqj",
@@ -114,6 +114,7 @@
   "allowScripts": {
     "canvas@3.2.3": true,
     "core-js@3.50.0": true,
-    "fsevents@2.3.3": true
+    "fsevents@2.3.3": true,
+    "unrs-resolver@1.12.2": true
   }
 }

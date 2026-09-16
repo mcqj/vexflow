@@ -74,6 +74,12 @@ Run the complete Vitest suite once:
 npm test
 ```
 
+*or*
+
+```sh
+npm run dev:nocache   # rebuilds the node_modules cache for a clean run
+```
+
 Run Vitest in watch mode while developing:
 
 ```sh
@@ -93,7 +99,21 @@ Update committed visual baselines deliberately after reviewing an intentional re
 npm run test:visual:update
 ```
 
-Playwright stores failure artifacts in `build/playwright-artifacts/`. The committed snapshots are macOS Chromium baselines, and CI runs the visual suite on macOS to match them.
+To update only the snapshots exercised by one named Playwright test, pass its title to `-g`. For example, update the Barline visual cases:
+
+```sh
+npx playwright test -g 'matches source-rendered barline cases' --update-snapshots
+```
+
+Inspect the changed PNG files with `git diff` before committing them. A title can cover multiple screenshots, so prefer the most specific test title available and never update baselines for an unexplained difference.
+
+Playwright stores failure artifacts in `build/playwright-artifacts/`, including expected, actual, and pixel-diff images. Each run also writes an HTML report to `build/playwright-report/`:
+
+```sh
+npx playwright show-report build/playwright-report
+```
+
+The committed snapshots are macOS Chromium baselines, and CI runs the visual suite on macOS to match them.
 
 The legacy reference-image workflow generates images with the Playwright backend:
 

@@ -15,7 +15,7 @@ import { TabNote } from './tabnote';
 import { TabStave } from './tabstave';
 import { Tickable } from './tickable';
 import { TickContext } from './tickcontext';
-import { Category, isCategory, isNote, isStaveNote } from './typeguard';
+import { isNote, isStaveNote } from './typeguard';
 import { defined, log, midLine, RuntimeError, sumArray } from './util';
 import { Voice } from './voice';
 
@@ -559,9 +559,7 @@ export class Formatter {
         // Add this tickable to the TickContext.
 
         tickable.addToModifierContext(staveTickToContextMap![integerTicks]);
-        if (!isCategory(tickable, Category.BarNote)) {
-          ticksUsed.add(tickable.getTicks());
-        }
+        ticksUsed.add(tickable.getTicks());
       });
     });
 
@@ -614,10 +612,8 @@ export class Formatter {
 
         // Add this tickable to the TickContext.
         const tickContext: TickContext = tickToContextMap[integerTicks];
-        tickContext.addTickable(tickable, voiceIndex);
-        if (!isCategory(tickable, Category.BarNote)) {
-          ticksUsed.add(tickable.getTicks());
-        }
+        tickContext.addTickable(tickable, voiceIndex, voice.isDependent());
+        ticksUsed.add(tickable.getTicks());
       });
     });
 
@@ -736,7 +732,7 @@ export class Formatter {
             // Look for matching voices between tick contexts.
             const matchingVoices: string[] = [];
             Object.keys(voices).forEach((v) => {
-              if (backVoices[v]) {
+              if (backVoices[v] && !voices[v].getVoice().isDependent()) {
                 matchingVoices.push(v);
               }
             });
@@ -804,9 +800,9 @@ export class Formatter {
 
       contextList.forEach((tick, index) => {
         const context = contextMap[tick];
-        if (index > 0) {
+        const ideal = idealDistances[index];
+        if (index > 0 && ideal.fromTickable) {
           const contextX = context.getX();
-          const ideal = idealDistances[index];
           const errorPx = defined(ideal.fromTickable).getX() + ideal.expectedDistance - (contextX + spaceAccum);
 
           let negativeShiftPx = 0;

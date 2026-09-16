@@ -3,6 +3,10 @@ import { defineConfig, devices } from '@playwright/test';
 export default defineConfig({
   testDir: './tests/playwright',
   outputDir: './build/playwright-artifacts',
+  reporter: [
+    ['list'],
+    ['html', { outputFolder: './build/playwright-report', open: 'never' }],
+  ],
   use: {
     baseURL: 'http://127.0.0.1:4173',
     browserName: 'chromium',

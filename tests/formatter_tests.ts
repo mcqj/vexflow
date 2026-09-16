@@ -12,6 +12,7 @@ import { Articulation } from '../src/articulation';
 import { BarNote } from '../src/barnote';
 import { Beam } from '../src/beam';
 import { Bend } from '../src/bend';
+import { ClefNote } from '../src/clefnote';
 import { Dot } from '../src/dot';
 import { Element } from '../src/element';
 import { FontWeight } from '../src/font';
@@ -31,6 +32,7 @@ import { StemmableNote } from '../src/stemmablenote';
 import { StringNumber } from '../src/stringnumber';
 import { System } from '../src/system';
 import { TextNote } from '../src/textnote';
+import { TimeSigNote } from '../src/timesignote';
 import type { Tickable } from '../src/tickable';
 import { Tuplet } from '../src/tuplet';
 import { Voice, VoiceTime } from '../src/voice';
@@ -90,6 +92,8 @@ const FormatterTests = {
     run('Tight 2', tightNotes2);
     run('Annotations', annotations);
     VexFlowTests.test('Ignored bar notes preserve lyric tick alignment', ignoredBarNotesPreserveLyricTickAlignment);
+    VexFlowTests.test('Inline clef and time signatures preserve note spacing', inlineSpacersPreserveNoteSpacing);
+    VexFlowTests.test('Dependent voices do not affect music layout', dependentVoicesDoNotAffectMusicLayout);
     run('Proportional Formatting - No Tuning', proportional, { debug: true, iterations: 0 });
     run('Proportional Formatting - No Justification', proportional, { justify: false, debug: true, iterations: 0 });
     run('Proportional Formatting (20 iterations)', proportional, { debug: true, iterations: 20, alpha: 0.5 });
@@ -104,20 +108,60 @@ function getGlyphWidth(glyph: string): number {
 }
 
 function ignoredBarNotesPreserveLyricTickAlignment(assert: Assert): void {
-  const musicNotes = Array.from({ length: 12 }, () => new StaveNote({ keys: ['c/4'], duration: '8' }));
+  const musicNotes = [
+    ...Array.from({ length: 6 }, () => new StaveNote({ keys: ['c/4'], duration: '8' })),
+    new BarNote(),
+    ...Array.from({ length: 6 }, () => new StaveNote({ keys: ['c/4'], duration: '8' })),
+  ];
   const when = new TextNote({ text: 'When', duration: '8' });
   const lyricNotes = [
     ...Array.from({ length: 6 }, () => new GhostNote({ duration: '8' })),
-    new BarNote(),
+    new GhostNote({ duration: 'b' }),
     when,
     ...Array.from({ length: 5 }, () => new TextNote({ text: '', duration: '8' })),
   ];
   const musicVoice = new Voice({ numBeats: 6, beatValue: 4 }).addTickables(musicNotes);
-  const lyricVoice = new Voice({ numBeats: 6, beatValue: 4 }).addTickables(lyricNotes);
+  const lyricVoice = new Voice({ numBeats: 6, beatValue: 4 }).setMode(Voice.Mode.SOFT).addTickables(lyricNotes);
 
   new Formatter().joinVoices([musicVoice, lyricVoice]).format([musicVoice, lyricVoice], 500);
 
-  assert.strictEqual(when.getTickContext(), musicNotes[6].getTickContext());
+  assert.notStrictEqual(musicNotes[6].getTickContext(), musicNotes[7].getTickContext());
+  assert.strictEqual(when.getTickContext(), musicNotes[7].getTickContext());
+}
+
+function inlineSpacersPreserveNoteSpacing(assert: Assert): void {
+  const firstNote = new StaveNote({ keys: ['c/4'], duration: '4' });
+  const clef = new ClefNote('alto', 'small');
+  const secondNote = new StaveNote({ keys: ['c/4'], duration: '4', clef: 'alto' });
+  const timeSignature = new TimeSigNote('3/4');
+  const thirdNote = new StaveNote({ keys: ['c/4'], duration: '4', clef: 'alto' });
+  const voice = new Voice('4/4').setMode(Voice.Mode.SOFT).addTickables([firstNote, clef, secondNote, timeSignature, thirdNote]);
+
+  new Formatter().joinVoices([voice]).format([voice], 500);
+
+  assert.notStrictEqual(clef.getTickContext(), secondNote.getTickContext());
+  assert.notStrictEqual(timeSignature.getTickContext(), thirdNote.getTickContext());
+}
+
+function dependentVoicesDoNotAffectMusicLayout(assert: Assert): void {
+  const makeMusicNotes = () => Array.from({ length: 4 }, () => new StaveNote({ keys: ['c/4'], duration: '4' }));
+  const baselineNotes = makeMusicNotes();
+  const baselineVoice = new Voice('4/4').addTickables(baselineNotes);
+  new Formatter().joinVoices([baselineVoice]).format([baselineVoice], 500);
+
+  const musicNotes = makeMusicNotes();
+  const musicVoice = new Voice('4/4').addTickables(musicNotes);
+  const lyric = new TextNote({ text: 'A much wider lyric', duration: '4' });
+  const lyricVoice = new Voice('4/4').setDependent(true).addTickables([
+    new GhostNote({ duration: '4' }),
+    lyric,
+    new GhostNote({ duration: '2' }),
+  ]);
+  new Formatter().joinVoices([musicVoice, lyricVoice]).format([musicVoice, lyricVoice], 500);
+
+  assert.strictEqual(lyric.getTickContext(), musicNotes[1].getTickContext());
+  assert.strictEqual(lyric.getX(), musicNotes[1].getX());
+  musicNotes.forEach((note, index) => assert.strictEqual(note.getX(), baselineNotes[index].getX()));
 }
 
 function getResolutionMultiplier(assert: Assert): void {

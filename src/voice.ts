@@ -49,6 +49,7 @@ export class Voice extends Element {
   protected expTicksUsed?: number;
   protected preFormatted: boolean = false;
   protected options: { softmaxFactor: number };
+  protected dependent: boolean = false;
 
   protected readonly totalTicks: Fraction;
   protected readonly ticksUsed: Fraction = new Fraction(0, 1);
@@ -129,6 +130,17 @@ export class Voice extends Element {
   setMode(mode: number): this {
     this.mode = mode;
     return this;
+  }
+
+  /** Mark this voice as dependent on the layout established by other voices. */
+  setDependent(dependent: boolean): this {
+    this.dependent = dependent;
+    return this;
+  }
+
+  /** Return whether this voice follows another voice's layout. */
+  isDependent(): boolean {
+    return this.dependent;
   }
 
   /** Get the resolution multiplier for the voice. */
