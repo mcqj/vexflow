@@ -1,6 +1,6 @@
 {
   "name": "@mcqj/vexflow",
-  "version": "0.0.1-alpha.7",
+  "version": "0.0.1-alpha.8",
   "description": "A JavaScript library for rendering music notation and guitar tablature.",
   "author": {
     "name": "mcqj",
@@ -50,9 +50,10 @@
     "url": "https://github.com/vexflow/vexflow/issues"
   },
   "devDependencies": {
-    "@eslint/js": "^9.28.0",
+    "@eslint/js": "^10.0.1",
+    "@napi-rs/canvas": "^1.2.0",
     "@playwright/test": "^1.63.0",
-    "@types/node": "^24.13.3",
+    "@types/node": "^26.6.6",
     "@typescript-eslint/eslint-plugin": "^8.33.1",
     "@typescript-eslint/parser": "^8.33.1",
     "@vexflow-fonts/academico": "^1.0.1",
@@ -65,16 +66,16 @@
     "@vexflow-fonts/petalumascript": "^1.0.0",
     "@vexflow-fonts/sebastian": "^1.0.1",
     "canvas": "^3.1.0",
-    "eslint": "^9.28.0",
+    "eslint": "^10.15.0",
     "eslint-plugin-import-x": "^4.17.1",
-    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "eslint-plugin-simple-import-sort": "^14.0.0",
     "globals": "^17.12.0",
-    "jsdom": "^30.1.3",
+    "jsdom": "^31.0.1",
     "jspdf": "^4.0.0",
     "magic-string": "^1.2.3",
     "opentype.js": "^2.0.0",
     "svg2pdf.js": "^2.5.0",
-    "typescript": "^5.8.3",
+    "typescript": "^6.0.3",
     "vite": "^8.2.2",
     "vitest": "^5.0.0"
   },

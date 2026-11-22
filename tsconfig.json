@@ -12,6 +12,9 @@
     "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */,
     "moduleResolution": "bundler",
     "lib": ["dom", "es2022"],
+    /* TypeScript 6.0 no longer auto-includes @types/* packages. The tests use Node
+       globals (Buffer, global), so opt in explicitly instead of relying on the old default. */
+    "types": ["node"],
     "removeComments": false,
     "noImplicitOverride": true /* Require explicit `override` keyword on all class members that override a base-class member. */
   },
