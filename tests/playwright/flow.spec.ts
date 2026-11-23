@@ -188,3 +188,29 @@ test("matches source-rendered stave hairpin cases", async ({ page }) => {
     );
   }
 });
+
+test("matches source-rendered key signature cases", async ({ page }) => {
+  await loadSourceTestModule(page, "KeySignature");
+
+  const cases = page.locator("#qunit-tests .testcanvas");
+  const caseIds = await renderCaseIds(page);
+
+  for (const [index, caseId] of caseIds.entries()) {
+    await expect(cases.nth(index).locator(".vex-tabdiv")).toHaveScreenshot(
+      `${index}-${caseId}.png`,
+    );
+  }
+});
+
+test("matches source-rendered tuplet cases", async ({ page }) => {
+  await loadSourceTestModule(page, "Tuplet");
+
+  const cases = page.locator("#qunit-tests .testcanvas");
+  const caseIds = await renderCaseIds(page);
+
+  for (const [index, caseId] of caseIds.entries()) {
+    await expect(cases.nth(index).locator(".vex-tabdiv")).toHaveScreenshot(
+      `${index}-${caseId}.png`,
+    );
+  }
+});
