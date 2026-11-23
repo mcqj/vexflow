@@ -380,7 +380,7 @@ export class Accidental extends Modifier {
     line2: StaveLineAccidentalLayoutMetrics
   ): boolean {
     let clearance = line2.line - line1.line;
-    let clearanceRequired = 3;
+    let clearanceRequired: number;
     // But less clearance is required for certain accidentals: b, bb and ##.
     if (clearance > 0) {
       // then line 2 is on top

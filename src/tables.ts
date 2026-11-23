@@ -492,14 +492,15 @@ export class Tables {
     const intValue = typeof value.intVal !== 'undefined' ? octave * 12 + value.intVal : undefined;
 
     // If the user specified a glyph, overwrite the glyph code.
-    let code = '';
-    let glyphName = 'N';
+    let glyphName: string;
     if (pieces.length > 2 && pieces[2]) {
       glyphName = pieces[2].toUpperCase();
     } else if (type !== 'N') {
       glyphName = type;
-    } else glyphName = key;
-    code = this.codeNoteHead(glyphName, duration);
+    } else {
+      glyphName = key;
+    }
+    const code = this.codeNoteHead(glyphName, duration);
 
     return {
       key,

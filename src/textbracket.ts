@@ -141,7 +141,7 @@ export class TextBracket extends Element {
     const ctx = this.checkContext();
     this.setRendered();
 
-    let y = 0;
+    let y: number;
     switch (this.position) {
       case TextBracketPosition.TOP:
         y = this.start.checkStave().getYForTopText(this.line);

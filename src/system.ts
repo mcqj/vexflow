@@ -239,7 +239,7 @@ export class System extends Element {
   /** Format the system. */
   format(): void {
     const optionsDetails = this.options.details;
-    let justifyWidth = 0;
+    let justifyWidth: number;
     const formatter = new Formatter(optionsDetails);
     this.formatter = formatter;
 

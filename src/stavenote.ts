@@ -112,7 +112,7 @@ export class StaveNote extends StemmableNote {
       // Formatting uses sortedKeyProps to calculate line and minL.
       const props = notes[i].sortedKeyProps;
       const line = props[0].keyProps.line;
-      let minL = props[props.length - 1].keyProps.line;
+      let minL: number;
       const stemDirection = notes[i].getStemDirection();
       const stemMax = notes[i].getStemLength() / 10;
       const stemMin = notes[i].getStemMinimumLength() / 10;
@@ -146,10 +146,10 @@ export class StaveNote extends StemmableNote {
       });
     }
 
-    let voices = 0;
-    let noteU = undefined;
-    let noteM = undefined;
-    let noteL = undefined;
+    let voices: number;
+    let noteU: StaveNoteFormatSettings;
+    let noteM: StaveNoteFormatSettings | undefined;
+    let noteL: StaveNoteFormatSettings;
     const draw = [false, false, false];
 
     for (let i = 0; i < notesList.length; i++) {
@@ -468,7 +468,6 @@ export class StaveNote extends StemmableNote {
     const keys = this.getKeys();
 
     let lastLine = undefined;
-    let lineDiff = undefined;
     let displaced = false;
 
     // Draw notes from bottom to top.
@@ -494,10 +493,8 @@ export class StaveNote extends StemmableNote {
 
       // Keep track of last line with a note head, so that consecutive heads
       // are correctly displaced.
-      if (lastLine === undefined) {
-        lastLine = line;
-      } else {
-        lineDiff = Math.abs(lastLine - line);
+      if (lastLine !== undefined) {
+        const lineDiff = Math.abs(lastLine - line);
         if (lineDiff === 0 || lineDiff === 0.5) {
           displaced = !displaced;
         } else {
@@ -566,19 +563,15 @@ export class StaveNote extends StemmableNote {
 
       // Calculate displacement of this note
       const line = props.line;
-      if (lastLine === undefined) {
-        lastLine = line;
-      } else {
-        // < 1 means == 0.5 (second) or 0.0 (unison)
-        if (Math.abs(lastLine - line) < 1) {
-          this.displaced = true;
-          props.displaced = true;
+      // < 1 means == 0.5 (second) or 0.0 (unison)
+      if (lastLine !== undefined && Math.abs(lastLine - line) < 1) {
+        this.displaced = true;
+        props.displaced = true;
 
-          // Have to mark the previous note as
-          // displaced as well, for modifier placement
-          if (this.keyProps.length > 0) {
-            this.keyProps[i - 1].displaced = true;
-          }
+        // Have to mark the previous note as
+        // displaced as well, for modifier placement
+        if (this.keyProps.length > 0) {
+          this.keyProps[i - 1].displaced = true;
         }
       }
 

@@ -1,4 +1,4 @@
-import { TestAssert, TestCallback, TestMetadata, TestRunner, TestRunnerBackend } from "./test_runner";
+import { TestAssert, TestMetadata, TestRunner, TestRunnerBackend } from "./test_runner";
 
 export interface BrowserTestRunnerOptions {
   filter?: string;

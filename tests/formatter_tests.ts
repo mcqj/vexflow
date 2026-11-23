@@ -32,8 +32,8 @@ import { StemmableNote } from '../src/stemmablenote';
 import { StringNumber } from '../src/stringnumber';
 import { System } from '../src/system';
 import { TextNote } from '../src/textnote';
-import { TimeSigNote } from '../src/timesignote';
 import type { Tickable } from '../src/tickable';
+import { TimeSigNote } from '../src/timesignote';
 import { Tuplet } from '../src/tuplet';
 import { Voice, VoiceTime } from '../src/voice';
 import { MockTickable } from './mocks';
@@ -320,8 +320,7 @@ function rightJustify(options: TestOptions): void {
   const f = VexFlowTests.makeFactory(options, 1200, 150);
   const getTickables = (time: VoiceTime, n: number, duration: string, duration2: string): Voice => {
     const tickar: StaveNote[] = [];
-    let i = 0;
-    for (i = 0; i < n; ++i) {
+    for (let i = 0; i < n; ++i) {
       const dd = i === n - 1 ? duration2 : duration;
       tickar.push(new StaveNote({ keys: ['f/4'], duration: dd }));
     }

@@ -115,7 +115,7 @@ export class Repetition extends StaveModifier {
 
   drawSymbolText(stave: Stave, x: number, text: string, drawCoda: boolean): this {
     const ctx = stave.checkContext();
-    let textX = 0;
+    let textX: number;
 
     this.text = text;
     if (drawCoda) {

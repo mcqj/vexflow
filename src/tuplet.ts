@@ -321,13 +321,12 @@ export class Tuplet extends Element {
     const suffixOffsetY = Metrics.get('Tuplet.suffix.suffixOffsetY');
 
     const ctx = this.checkContext();
-    let xPos = 0;
-    let yPos = 0;
+    let xPos: number;
 
     // determine x value of left bound of tuplet
     const firstNote = this.notes[0] as StemmableNote;
     const lastNote = this.notes[this.notes.length - 1] as StemmableNote;
-    let bodyWidth = 0;
+    let bodyWidth: number;
     if (!bracketed) {
       xPos = firstNote.getStemX();
       bodyWidth = lastNote.getStemX() - xPos;
@@ -342,7 +341,7 @@ export class Tuplet extends Element {
     this.setX(xPos);
 
     // determine y value for tuplet
-    yPos = this.getYPosition();
+    const yPos = this.getYPosition();
 
     // set y and height for bounding box calculations
     this.setY(location === TupletLocation.TOP ? yPos : yPos - bracketLegLength + bracketThickness);
@@ -351,9 +350,8 @@ export class Tuplet extends Element {
     // calculate width taken by all text elements
     const ratioWidth = this.textElement.getWidth();
     let totalTextWidth = ratioWidth;
-    let noteWidth = 0;
     if (suffix) {
-      noteWidth = this.suffixElement.getWidth();
+      const noteWidth = this.suffixElement.getWidth();
       totalTextWidth = ratioWidth + extraSpacing + noteWidth;
     }
 
@@ -397,7 +395,6 @@ export class Tuplet extends Element {
       this.suffixElement.renderText(ctx, currentX, suffixY);
       this.suffixElement.setX(currentX);
       this.suffixElement.setY(suffixY);
-      currentX += noteWidth;
     }
 
     this.drawPointerRect();

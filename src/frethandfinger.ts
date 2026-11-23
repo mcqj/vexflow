@@ -75,7 +75,6 @@ export class FretHandFinger extends Modifier {
     let lastNote = null;
 
     for (let i = 0; i < numsList.length; ++i) {
-      let numShift = 0;
       const { note, pos, num, line, shiftL, shiftR } = numsList[i];
 
       // Reset the position of the string number every line.
@@ -87,11 +86,11 @@ export class FretHandFinger extends Modifier {
       const numWidth = num.getWidth() + numSpacing;
       if (pos === Modifier.Position.LEFT) {
         num.setXShift(leftShift + numShiftL);
-        numShift = leftShift + numWidth; // spacing
+        const numShift = leftShift + numWidth; // spacing
         xWidthL = numShift > xWidthL ? numShift : xWidthL;
       } else if (pos === Modifier.Position.RIGHT) {
         num.setXShift(numShiftR);
-        numShift = shiftRight + numWidth; // spacing
+        const numShift = shiftRight + numWidth; // spacing
         xWidthR = numShift > xWidthR ? numShift : xWidthR;
       }
       lastLine = line;

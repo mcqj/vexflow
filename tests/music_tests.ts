@@ -214,10 +214,9 @@ function scaleTones(assert: Assert): void {
   const C_DORIAN = music.getScaleTones(music.getNoteValue('c'), Music.scales.dorian);
   values = ['c', 'd', 'eb', 'f', 'g', 'a', 'bb'];
 
-  let note = null;
   assert.equal(C_DORIAN.length, 7);
   for (let i = 0; i < C_DORIAN.length; ++i) {
-    note = music.getCanonicalNoteName(C_DORIAN[i]);
+    const note = music.getCanonicalNoteName(C_DORIAN[i]);
     assert.equal(manager.selectNote(note).note, values[i]);
   }
 
@@ -228,7 +227,7 @@ function scaleTones(assert: Assert): void {
   assert.equal(C_MIXOLYDIAN.length, 7);
 
   for (let i = 0; i < C_MIXOLYDIAN.length; ++i) {
-    note = music.getCanonicalNoteName(C_MIXOLYDIAN[i]);
+    const note = music.getCanonicalNoteName(C_MIXOLYDIAN[i]);
     assert.equal(manager.selectNote(note).note, values[i]);
   }
 }

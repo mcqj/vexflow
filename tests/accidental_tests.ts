@@ -406,17 +406,15 @@ function cautionary(options: TestOptions): void {
   const scale = 0.85;
   const staveWidth = 900;
   const staveHeight = 75;
-  let i = 0;
-  let j = 0;
   const f = VexFlowTests.makeFactory(options, staveWidth + 10, staveHeight * staveCount + 10);
   f.getContext().scale(scale, scale);
 
   const accids = Object.values(accidentals).filter((accid) => accid !== '{' && accid !== '}');
-  for (i = 0; i < staveCount; ++i) {
+  for (let i = 0; i < staveCount; ++i) {
     const stave = f.Stave({ x: 0, y: 10 + (staveHeight / scale) * i, width: staveWidth / scale });
     const score = f.EasyScore();
     const rowMap = [];
-    for (j = 0; j < notesPerStave && j + i * notesPerStave < accids.length; ++j) {
+    for (let j = 0; j < notesPerStave && j + i * notesPerStave < accids.length; ++j) {
       rowMap.push(accids[j + i * notesPerStave]);
     }
     const notes = rowMap.map((accidType: string) =>
