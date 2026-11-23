@@ -842,12 +842,11 @@ export class Formatter {
           const contextX = context.getX();
           const errorPx = defined(ideal.fromTickable).getX() + ideal.expectedDistance - (contextX + spaceAccum);
 
-          let negativeShiftPx = 0;
           if (errorPx > 0) {
             spaceAccum += errorPx;
           } else if (errorPx < 0) {
-            negativeShiftPx = Math.min(ideal.maxNegativeShiftPx, Math.abs(errorPx));
-            spaceAccum += -negativeShiftPx;
+            const negativeShiftPx = Math.min(ideal.maxNegativeShiftPx, Math.abs(errorPx));
+            spaceAccum -= negativeShiftPx;
           }
           context.setX(contextX + spaceAccum);
         }
@@ -908,7 +907,7 @@ export class Formatter {
       return configMaxPadding * 2 < lastTickablePadding ? lastTickablePadding : configMaxPadding;
     };
     let paddingMax = paddingMaxCalc(targetWidth);
-    let paddingMin = paddingMax - (configMaxPadding - configMinPadding);
+    const paddingMin = paddingMax - (configMaxPadding - configMinPadding);
     const maxX = adjustedJustifyWidth - paddingMin;
 
     let iterations = maxIterations;
@@ -917,7 +916,6 @@ export class Formatter {
     while ((actualWidth > maxX && iterations > 0) || (actualWidth + paddingMax < maxX && iterations > 1)) {
       targetWidth -= actualWidth - maxX;
       paddingMax = paddingMaxCalc(targetWidth);
-      paddingMin = paddingMax - (configMaxPadding - configMinPadding);
       actualWidth = shiftToIdealDistances(calculateIdealDistances(targetWidth));
       iterations--;
     }
@@ -1049,7 +1047,7 @@ export class Formatter {
         const metrics = note.getMetrics();
         const formatterMetrics = note.getFormatterMetrics();
         const leftNoteEdge = note.getX() + metrics.notePx + metrics.modRightPx + metrics.rightDisplacedHeadPx;
-        let space = 0;
+        let space: number;
 
         if (i < notes.length - 1) {
           const rightNote = notes[i + 1];

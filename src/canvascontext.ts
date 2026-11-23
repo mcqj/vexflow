@@ -277,8 +277,8 @@ export class CanvasContext extends RenderContext {
   measureText(text: string): TextMeasure {
     const metrics = this.context2D.measureText(text);
 
-    let y = 0;
-    let height = 0;
+    let y: number;
+    let height: number;
     if (metrics.fontBoundingBoxAscent) {
       y = -metrics.fontBoundingBoxAscent;
       height = metrics.fontBoundingBoxDescent + metrics.fontBoundingBoxAscent;

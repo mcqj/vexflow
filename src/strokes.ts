@@ -110,7 +110,6 @@ export class Stroke extends Modifier {
     this.setRendered();
 
     const start = note.getModifierStartXY(this.position, this.index);
-    let yPositions = note.getYs();
     let topY = start.y;
     let botY = start.y;
     const x = start.x - 5;
@@ -122,7 +121,7 @@ export class Stroke extends Modifier {
       if (isNote(note)) {
         // Only Note objects have getYs().
         // note is an instance of either StaveNote or TabNote.
-        yPositions = note.getYs();
+        const yPositions = note.getYs();
         for (let n = 0; n < yPositions.length; n++) {
           if (this.note === notes[i] || this.allVoices) {
             topY = Math.min(topY, yPositions[n]);

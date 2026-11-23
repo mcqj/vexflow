@@ -62,7 +62,6 @@ function lyrics(options: TestOptions): void {
   let fontSize = FONT_SIZE;
   let x = 10;
   let width = 170;
-  let ratio = 1;
   const registry = new Registry();
   Registry.enableDefaultRegistry(registry);
   const f = VexFlowTests.makeFactory(options, 750, 260);
@@ -97,7 +96,7 @@ function lyrics(options: TestOptions): void {
     });
 
     f.draw();
-    ratio = (fontSize + 2) / fontSize;
+    const ratio = (fontSize + 2) / fontSize;
     width = width * ratio;
     x = x + width;
     fontSize = fontSize + 2;

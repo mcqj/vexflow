@@ -800,7 +800,7 @@ export class Beam extends Element {
 
     type BeamInfo = { start: number; end?: number };
     const beamLines: BeamInfo[] = [];
-    let currentBeam: BeamInfo | undefined = undefined;
+    let currentBeam: BeamInfo | undefined;
     const partialBeamLength = this.renderOptions.partialBeamLength;
     let previousShouldBreak = false;
     let tickTally = 0;

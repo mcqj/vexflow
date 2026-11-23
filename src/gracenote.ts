@@ -53,7 +53,7 @@ export class GraceNote extends StaveNote {
     if (this.slash && stem) {
       const scale = this.getFontScale();
 
-      let slashBBox = undefined;
+      let slashBBox: Record<string, number>;
       const beam = this.beam;
       if (beam) {
         // FIXME: should render slash after beam?

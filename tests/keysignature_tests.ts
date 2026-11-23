@@ -91,14 +91,13 @@ function majorKeys(options: TestOptions, contextBuilder: ContextBuilder): void {
   const stave2 = new Stave(10, 90, sharpTestWidth);
   const keys = MAJOR_KEYS;
 
-  let keySig = null;
   for (let i = 0; i < 8; ++i) {
-    keySig = new KeySignature(keys[i]);
+    const keySig = new KeySignature(keys[i]);
     keySig.addToStave(stave1);
   }
 
   for (let n = 8; n < keys.length; ++n) {
-    keySig = new KeySignature(keys[n]);
+    const keySig = new KeySignature(keys[n]);
     keySig.addToStave(stave2);
   }
 
@@ -139,32 +138,31 @@ function majorKeysCanceled(options: TestOptions, contextBuilder: ContextBuilder)
   const stave4 = new Stave(10, 250, eSharpTestWidth).addClef('treble');
   const keys = MAJOR_KEYS;
 
-  let keySig = null;
   let i;
   let n;
   for (i = 0; i < 8; ++i) {
-    keySig = new KeySignature(keys[i]);
+    const keySig = new KeySignature(keys[i]);
     keySig.cancelKey('Cb');
     keySig.setPadding(flatPadding);
     keySig.addToStave(stave1);
   }
 
   for (n = 8; n < keys.length; ++n) {
-    keySig = new KeySignature(keys[n]);
+    const keySig = new KeySignature(keys[n]);
     keySig.cancelKey('C#');
     keySig.setPadding(sharpPadding);
     keySig.addToStave(stave2);
   }
 
   for (i = 0; i < 8; ++i) {
-    keySig = new KeySignature(keys[i]);
+    const keySig = new KeySignature(keys[i]);
     keySig.cancelKey('E');
     keySig.setPadding(flatPadding);
     keySig.addToStave(stave3);
   }
 
   for (n = 8; n < keys.length; ++n) {
-    keySig = new KeySignature(keys[n]);
+    const keySig = new KeySignature(keys[n]);
     keySig.cancelKey('Ab');
     keySig.setPadding(sharpPadding);
     keySig.addToStave(stave4);
@@ -231,32 +229,31 @@ function majorKeysAltered(options: TestOptions, contextBuilder: ContextBuilder):
   const stave4 = new Stave(10, 250, 750).addClef('treble');
   const keys = MAJOR_KEYS;
 
-  let keySig = null;
   let i;
   let n;
   for (i = 0; i < 8; ++i) {
-    keySig = new KeySignature(keys[i]);
+    const keySig = new KeySignature(keys[i]);
     keySig.alterKey(['bs', 'bs']);
     keySig.setPadding(18);
     keySig.addToStave(stave1);
   }
 
   for (n = 8; n < keys.length; ++n) {
-    keySig = new KeySignature(keys[n]);
+    const keySig = new KeySignature(keys[n]);
     keySig.alterKey(['+', '+', '+']);
     keySig.setPadding(20);
     keySig.addToStave(stave2);
   }
 
   for (i = 0; i < 8; ++i) {
-    keySig = new KeySignature(keys[i]);
+    const keySig = new KeySignature(keys[i]);
     keySig.alterKey(['n', 'bs', 'bb']);
     keySig.setPadding(18);
     keySig.addToStave(stave3);
   }
 
   for (n = 8; n < keys.length; ++n) {
-    keySig = new KeySignature(keys[n]);
+    const keySig = new KeySignature(keys[n]);
     keySig.alterKey(['++', '+', 'n', '+']);
     keySig.setPadding(20);
     keySig.addToStave(stave4);
@@ -287,14 +284,13 @@ function minorKeys(options: TestOptions, contextBuilder: ContextBuilder): void {
   const stave2 = new Stave(10, 90, sharpTestWidth);
   const keys = MINOR_KEYS;
 
-  let keySig = null;
   for (let i = 0; i < 8; ++i) {
-    keySig = new KeySignature(keys[i]);
+    const keySig = new KeySignature(keys[i]);
     keySig.addToStave(stave1);
   }
 
   for (let n = 8; n < keys.length; ++n) {
-    keySig = new KeySignature(keys[n]);
+    const keySig = new KeySignature(keys[n]);
     keySig.addToStave(stave2);
   }
 

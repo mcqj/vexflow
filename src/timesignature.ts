@@ -73,7 +73,7 @@ export class TimeSignature extends StaveModifier {
   }
 
   static getTimeSigCode(key: string, smallSig = false): string {
-    let code: string = Glyphs.null;
+    let code: string;
     switch (key) {
       case 'C':
         code = Glyphs.timeSigCommon;
@@ -107,24 +107,21 @@ export class TimeSignature extends StaveModifier {
   makeTimeSignatureGlyph(topDigits: string, botDigits: string): void {
     // note that 'code' is ignored by TimeSignatureGlyph when rendering.
     let txt = '';
-    let topWidth = 0;
-    let height = 0;
     for (let i = 0; i < topDigits.length; ++i) {
       const code = TimeSignature.getTimeSigCode(topDigits[i], botDigits.length > 0);
       txt += code;
     }
     this.topText.setText(txt);
-    topWidth = this.topText.getWidth();
-    height = this.topText.getHeight();
+    const topWidth = this.topText.getWidth();
+    let height = this.topText.getHeight();
 
-    let botWidth = 0;
     txt = '';
     for (let i = 0; i < botDigits.length; ++i) {
       const code = TimeSignature.getTimeSigCode(botDigits[i], true);
       txt += code;
     }
     this.botText.setText(txt);
-    botWidth = this.botText.getWidth();
+    const botWidth = this.botText.getWidth();
     height = Math.max(height, this.botText.getHeight());
 
     // If the height of the digits is more than three staff spaces (30), shift half a line line

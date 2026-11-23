@@ -189,7 +189,7 @@ export class Stem extends Element {
     let stemY;
     const stemDirection = this.stemDirection;
 
-    let yBaseOffset: number = 0;
+    let yBaseOffset: number;
     if (stemDirection === Stem.DOWN) {
       // Down stems are rendered to the left of the head.
       stemX = this.xBegin;

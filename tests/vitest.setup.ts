@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
 
-import { TestAssert, TestCallback, TestRunner, TestRunnerBackend } from './test_runner';
+import { TestAssert, TestRunner, TestRunnerBackend } from './test_runner';
 
 function createAssert(moduleName: string): TestAssert {
   return {
@@ -17,7 +17,11 @@ function createAssert(moduleName: string): TestAssert {
     strictEqual: (actual, expected) => expect(actual).toBe(expected),
     throws: (callback, expected) => {
       const assertion = expect(callback);
-      typeof expected === 'string' || expected === undefined ? assertion.toThrow() : assertion.toThrow(expected);
+      if (typeof expected === 'string' || expected === undefined) {
+        assertion.toThrow();
+      } else {
+        assertion.toThrow(expected);
+      }
     },
   };
 }

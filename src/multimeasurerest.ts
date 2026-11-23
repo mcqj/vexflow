@@ -184,7 +184,6 @@ export class MultiMeasureRest extends Element {
     elMiddle.renderText(ctx, x, yMiddle);
     x += elMiddle.getWidth();
     elTop.renderText(ctx, x, yTop);
-    x += elTop.getWidth();
   }
 
   override draw(): void {
