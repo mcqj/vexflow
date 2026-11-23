@@ -2,6 +2,11 @@ import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
   testDir: './tests/playwright',
+  fullyParallel: true,
+  // GitHub's macOS runners have 3 vCPUs, so Playwright's default of 50% of the
+  // cores rounds down to a single worker. Pin CI to 2 so the suite still
+  // parallelises there.
+  workers: process.env.CI ? 2 : undefined,
   outputDir: './build/playwright-artifacts',
   reporter: [
     ['list'],
