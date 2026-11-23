@@ -166,6 +166,23 @@ export class TickContext {
   }
 
   /**
+   * Return the tickables that participate in spacing. Tickables from dependent
+   * voices follow the layout of the other voices and are excluded.
+   */
+  getNonDependentTickables(): Tickable[] {
+    return this.tickables.filter((tickable) => !this.dependentTickables.has(tickable));
+  }
+
+  /**
+   * Return true if this context contains tickables, all of which belong to
+   * dependent voices. Such contexts should not create a spacing slot of their
+   * own; they are positioned from the surrounding non-dependent contexts.
+   */
+  hasOnlyDependentTickables(): boolean {
+    return this.tickables.length > 0 && this.dependentTickables.size === this.tickables.length;
+  }
+
+  /**
    * Introduced on 2020-04-17 as getTickablesForVoice(voiceIndex).
    *   https://github.com/0xfe/vexflow/blame/dc97b0cc5bb93171c0038638c34362dc958222ca/src/tickcontext.js#L63
    * Renamed on 2021-08-05 to getTickableForVoice(voiceIndex). Method renamed to singular, since it returns one Tickable.

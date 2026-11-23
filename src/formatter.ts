@@ -51,7 +51,12 @@ export interface FormatParams {
 }
 
 export interface AlignmentTickContexts {
+  /** All tick positions, sorted. */
   list: number[];
+  /** Tick positions whose contexts participate in spacing and justification. */
+  spacingList: number[];
+  /** Tick positions whose contexts contain only dependent tickables. */
+  dependentList: number[];
   map: Record<number, TickContext>;
   array: TickContext[];
   resolutionMultiplier: number;
@@ -377,6 +382,8 @@ export class Formatter {
       map: {},
       array: [],
       list: [],
+      spacingList: [],
+      dependentList: [],
       resolutionMultiplier: 0,
     };
 
@@ -447,7 +454,9 @@ export class Formatter {
 
     this.createTickContexts(voices);
 
-    const { list: contextList, map: contextMap } = this.tickContexts!;
+    const { spacingList: contextList, map: contextMap } = this.tickContexts!;
+    const spacingVoices = voices.filter((voice) => !voice.isDependent());
+    const hasSpacingVoices = spacingVoices.length > 0;
     this.minTotalWidth = 0;
 
     // Go through each tick context and calculate total width,
@@ -455,13 +464,14 @@ export class Formatter {
     contextList.forEach((tick) => {
       const context = contextMap[tick];
       context.preFormat();
+      const spacingTickables = hasSpacingVoices ? context.getNonDependentTickables() : context.getTickables();
       // If this TC doesn't have all the voices on it, it's unaligned.
       // so increment the unaligned padding accumulator
-      if (context.getTickables().length < voices.length) {
+      if (spacingTickables.length < (hasSpacingVoices ? spacingVoices.length : voices.length)) {
         unalignedCtxCount += 1;
       }
       // Calculate the 'width entropy' over all the Tickables.
-      context.getTickables().forEach((t: Tickable) => {
+      spacingTickables.forEach((t: Tickable) => {
         wsum += t.getMetrics().width;
         dsum += t.getTicks().value();
         widths.push(t.getMetrics().width);
@@ -582,6 +592,8 @@ export class Formatter {
         map: {},
         array: [],
         list: [],
+        spacingList: [],
+        dependentList: [],
         resolutionMultiplier: 0,
       } as AlignmentTickContexts;
     }
@@ -617,10 +629,30 @@ export class Formatter {
       });
     });
 
+    const sortedTickList = tickList.sort((a, b) => a - b);
+    const spacingList: number[] = [];
+    const dependentList: number[] = [];
+    sortedTickList.forEach((tick) => {
+      if (tickToContextMap[tick].hasOnlyDependentTickables()) {
+        dependentList.push(tick);
+      } else {
+        spacingList.push(tick);
+      }
+    });
+
+    // If every voice is dependent, there is no music layout to follow.
+    // Fall back to treating all contexts as spacing contexts.
+    if (spacingList.length === 0) {
+      spacingList.push(...dependentList);
+      dependentList.length = 0;
+    }
+
     const contexts: AlignmentTickContexts = {
       map: tickToContextMap,
       array: tickContexts,
-      list: tickList.sort((a, b) => a - b),
+      list: sortedTickList,
+      spacingList,
+      dependentList,
       resolutionMultiplier,
     };
 
@@ -656,7 +688,9 @@ export class Formatter {
       throw new RuntimeError('NoTickContexts', 'preFormat requires TickContexts');
     }
 
-    const { list: contextList, map: contextMap } = contexts;
+    const { spacingList: contextList, map: contextMap } = contexts;
+
+    this.justifyWidth = justifyWidth;
 
     // Reset loss history for evaluator.
     this.lossHistory = [];
@@ -706,7 +740,10 @@ export class Formatter {
     this.hasMinTotalWidth = true;
 
     // No justification needed. End formatting.
-    if (justifyWidth <= 0) return this.evaluate();
+    if (justifyWidth <= 0) {
+      this.positionDependentContexts();
+      return this.evaluate();
+    }
 
     // Start justification. Subtract the right extra pixels of the final context because the formatter
     // justifies based on the context's X position, which is the left-most part of the note head.
@@ -836,7 +873,10 @@ export class Formatter {
     let actualWidth = shiftToIdealDistances(distances);
 
     // Just one context. Done formatting.
-    if (contextList.length === 1) return 0;
+    if (contextList.length === 1) {
+      this.positionDependentContexts();
+      return 0;
+    }
     const calcMinDistance = (targetWidth: number, distances: Distance[]) => {
       let mdCalc = targetWidth / 2;
       if (distances.length > 1) {
@@ -882,8 +922,79 @@ export class Formatter {
       iterations--;
     }
 
-    this.justifyWidth = justifyWidth;
+    this.positionDependentContexts();
     return this.evaluate();
+  }
+
+  /**
+   * Position contexts that contain only dependent tickables.
+   *
+   * Dependent voices follow the layout of the other voices, so their contexts
+   * are not part of the spacing list. Instead, place each one between the
+   * surrounding spacing contexts, interpolating by tick. Contexts before the
+   * first spacing context are aligned with it, and trailing contexts are
+   * interpolated across the final note's remaining duration toward the end of
+   * the justified layout.
+   */
+  protected positionDependentContexts(): void {
+    const contexts = this.tickContexts;
+    if (!contexts) return;
+
+    const { spacingList, dependentList, map } = contexts;
+    if (spacingList.length === 0 || dependentList.length === 0) return;
+
+    const firstSpacingContext = map[spacingList[0]];
+    const lastSpacingTick = spacingList[spacingList.length - 1];
+    const lastSpacingContext = map[lastSpacingTick];
+    const finalTick = lastSpacingTick + lastSpacingContext.getMaxTicks().value();
+    // Use the same effective justification width as the spacing pass.
+    const centerX =
+      this.justifyWidth > 0
+        ? (this.justifyWidth -
+            lastSpacingContext.getMetrics().notePx -
+            lastSpacingContext.getMetrics().totalRightPx -
+            firstSpacingContext.getMetrics().totalLeftPx) /
+          2
+        : undefined;
+    const endX = this.justifyWidth > 0 ? this.justifyWidth : undefined;
+
+    let nextIndex = 0;
+    dependentList.forEach((tick) => {
+      while (nextIndex < spacingList.length && spacingList[nextIndex] < tick) {
+        nextIndex++;
+      }
+
+      const prevTick = nextIndex > 0 ? spacingList[nextIndex - 1] : undefined;
+      const nextTick = nextIndex < spacingList.length ? spacingList[nextIndex] : undefined;
+      const context = map[tick];
+      // The spacing pass skips dependent-only contexts, so make sure their
+      // tickables still get their own metrics before they are drawn.
+      context.preFormat();
+
+      if (prevTick !== undefined && nextTick !== undefined) {
+        const prevX = map[prevTick].getX();
+        const nextX = map[nextTick].getX();
+        const ratio = (tick - prevTick) / (nextTick - prevTick);
+        context.setX(prevX + (nextX - prevX) * ratio);
+      } else if (prevTick !== undefined) {
+        const prevX = map[prevTick].getX();
+        if (endX !== undefined && finalTick > prevTick) {
+          // Trailing tickables follow the final note's remaining duration.
+          const ratio = Math.min(1, (tick - prevTick) / (finalTick - prevTick));
+          context.setX(prevX + (endX - prevX) * ratio);
+        } else {
+          context.setX(prevX);
+        }
+      } else if (nextTick !== undefined) {
+        context.setX(map[nextTick].getX());
+      }
+
+      if (centerX !== undefined) {
+        context.getCenterAlignedTickables().forEach((tickable: Tickable) => {
+          tickable.setCenterXShift(centerX - context.getX());
+        });
+      }
+    });
   }
 
   /** Calculate the total cost of this formatting decision. */
@@ -893,9 +1004,9 @@ export class Formatter {
     // Calculate available slack per tick context. This works out how much freedom
     // to move a context has in either direction, without affecting other notes.
     this.contextGaps = { total: 0, gaps: [] };
-    contexts.list.forEach((tick, index) => {
+    contexts.spacingList.forEach((tick, index) => {
       if (index === 0) return;
-      const prevTick = contexts.list[index - 1];
+      const prevTick = contexts.spacingList[index - 1];
       const prevContext = contexts.map[prevTick];
       const context = contexts.map[tick];
       const prevMetrics = prevContext.getMetrics();
@@ -931,6 +1042,8 @@ export class Formatter {
     }
 
     this.voices.forEach((voice) => {
+      // Dependent voices follow the layout and do not contribute to its cost.
+      if (voice.isDependent()) return;
       voice.getTickables().forEach((note, i, notes) => {
         const duration = note.getTicks().clone().simplify().toString();
         const metrics = note.getMetrics();
@@ -960,6 +1073,7 @@ export class Formatter {
     // root of the sum of squared deviations.
     let totalDeviation = 0;
     this.voices.forEach((voice) => {
+      if (voice.isDependent()) return;
       voice.getTickables().forEach((note) => {
         const duration = note.getTicks().clone().simplify().toString();
         const metrics = note.getFormatterMetrics();
@@ -998,7 +1112,7 @@ export class Formatter {
     // function `move` moved to tickcontext.
     let shift = 0;
     this.totalShift = 0;
-    contexts.list.forEach((tick, index, list) => {
+    contexts.spacingList.forEach((tick, index, list) => {
       const context = contexts.map[tick];
       const prevContext = index > 0 ? contexts.map[list[index - 1]] : undefined;
       const nextContext = index < list.length - 1 ? contexts.map[list[index + 1]] : undefined;
@@ -1022,6 +1136,8 @@ export class Formatter {
       this.totalShift += shift;
     });
 
+    // Dependent contexts follow the contexts moved above.
+    this.positionDependentContexts();
     return this.evaluate();
   }
 

@@ -94,6 +94,8 @@ const FormatterTests = {
     VexFlowTests.test('Ignored bar notes preserve lyric tick alignment', ignoredBarNotesPreserveLyricTickAlignment);
     VexFlowTests.test('Inline clef and time signatures preserve note spacing', inlineSpacersPreserveNoteSpacing);
     VexFlowTests.test('Dependent voices do not affect music layout', dependentVoicesDoNotAffectMusicLayout);
+    VexFlowTests.test('Off-grid dependent voices do not affect music layout', dependentOffGridVoicesDoNotAffectMusicLayout);
+    VexFlowTests.test('Off-grid dependent voices honor center alignment', dependentOffGridVoicesCenterAlign);
     run('Proportional Formatting - No Tuning', proportional, { debug: true, iterations: 0 });
     run('Proportional Formatting - No Justification', proportional, { justify: false, debug: true, iterations: 0 });
     run('Proportional Formatting (20 iterations)', proportional, { debug: true, iterations: 20, alpha: 0.5 });
@@ -162,6 +164,81 @@ function dependentVoicesDoNotAffectMusicLayout(assert: Assert): void {
   assert.strictEqual(lyric.getTickContext(), musicNotes[1].getTickContext());
   assert.strictEqual(lyric.getX(), musicNotes[1].getX());
   musicNotes.forEach((note, index) => assert.strictEqual(note.getX(), baselineNotes[index].getX()));
+}
+
+function dependentOffGridVoicesDoNotAffectMusicLayout(assert: Assert): void {
+  const makeMusicNotes = () => Array.from({ length: 4 }, () => new StaveNote({ keys: ['c/4'], duration: '4' }));
+  const makeLyricNotes = () =>
+    Array.from({ length: 16 }, (_, i) =>
+      i % 2 === 0 ? new GhostNote({ duration: '16' }) : new TextNote({ text: 'x', duration: '16' })
+    );
+
+  const baselineNotes = makeMusicNotes();
+  const baselineVoice = new Voice('4/4').addTickables(baselineNotes);
+  const baselineFormatter = new Formatter().joinVoices([baselineVoice]);
+  const baselineMinWidth = baselineFormatter.preCalculateMinTotalWidth([baselineVoice]);
+  baselineFormatter.format([baselineVoice], 500);
+
+  const musicNotes = makeMusicNotes();
+  const musicVoice = new Voice('4/4').addTickables(musicNotes);
+  const lyricNotes = makeLyricNotes();
+  const lyricVoice = new Voice('4/4').setMode(Voice.Mode.SOFT).setDependent(true).addTickables(lyricNotes);
+  const formatter = new Formatter().joinVoices([musicVoice, lyricVoice]);
+
+  // Dependent widths must not inflate the minimum total width.
+  assert.strictEqual(formatter.preCalculateMinTotalWidth([musicVoice, lyricVoice]), baselineMinWidth);
+  formatter.format([musicVoice, lyricVoice], 500);
+
+  // Only the four music ticks create spacing slots. The off-grid lyric ticks
+  // follow the music layout instead.
+  const tickContexts = formatter.getTickContexts();
+  assert.ok(tickContexts);
+  if (!tickContexts) return;
+  assert.equal(tickContexts.spacingList.length, 4);
+  assert.equal(tickContexts.dependentList.length, 12);
+
+  musicNotes.forEach((note, index) => assert.strictEqual(note.getX(), baselineNotes[index].getX()));
+
+  // The first off-grid lyric sits between the first two music notes.
+  assert.ok(lyricNotes[1].getX() > musicNotes[0].getX());
+  assert.ok(lyricNotes[1].getX() < musicNotes[1].getX());
+
+  // Trailing off-grid lyrics should spread across the final note's remaining
+  // duration instead of all sharing the final music onset.
+  const lastMusicX = musicNotes[3].getX();
+  const trailingLyricX = lyricNotes[13].getX();
+  const lastLyricX = lyricNotes[15].getX();
+  assert.ok(trailingLyricX > lastMusicX, 'First trailing lyric should follow the final music onset.');
+  assert.ok(lastLyricX > trailingLyricX, 'Trailing lyrics should not overlap.');
+  assert.ok(lastLyricX < 500, 'Trailing lyrics should stay within the justified width.');
+}
+
+function dependentOffGridVoicesCenterAlign(assert: Assert): void {
+  const musicNotes = Array.from({ length: 4 }, () => new StaveNote({ keys: ['c/4'], duration: '4' }));
+  const musicVoice = new Voice('4/4').addTickables(musicNotes);
+
+  const centered = new TextNote({ text: 'x', duration: '16', alignCenter: true });
+  const lyricNotes = Array.from({ length: 16 }, (_, i) => (i === 5 ? centered : new GhostNote({ duration: '16' })));
+  const lyricVoice = new Voice('4/4').setMode(Voice.Mode.SOFT).setDependent(true).addTickables(lyricNotes);
+
+  const formatter = new Formatter().joinVoices([musicVoice, lyricVoice]);
+  formatter.format([musicVoice, lyricVoice], 500);
+
+  const tickContexts = formatter.getTickContexts();
+  assert.ok(tickContexts);
+  if (!tickContexts) return;
+
+  const firstContext = tickContexts.map[tickContexts.spacingList[0]];
+  const lastContext = tickContexts.map[tickContexts.spacingList[tickContexts.spacingList.length - 1]];
+  const adjustedJustifyWidth =
+    500 - lastContext.getMetrics().notePx - lastContext.getMetrics().totalRightPx - firstContext.getMetrics().totalLeftPx;
+  const expectedCenterXShift = adjustedJustifyWidth / 2 - centered.getTickContext()!.getX();
+
+  assert.ok(expectedCenterXShift !== 0);
+  assert.ok(
+    Math.abs(centered.getCenterXShift() - expectedCenterXShift) < 1e-9,
+    'Center-aligned dependent tickables should use the same justified center as spacing tickables.'
+  );
 }
 
 function getResolutionMultiplier(assert: Assert): void {

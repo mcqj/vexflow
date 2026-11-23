@@ -9,21 +9,21 @@ const path = require('path');
 
 const { JSDOM } = require('jsdom');
 
-const { registerFont } = require('canvas');
+const { GlobalFonts } = require('@napi-rs/canvas');
 
-// JSDOM uses node-canvas internally. https://www.npmjs.com/package/canvas
-// node-canvas can load custom fonts with registerFont(...).
-// node-canvas doesn't seem to support WOFF2. Regular WOFF works fine.
+// JSDOM uses @napi-rs/canvas internally. https://www.npmjs.com/package/@napi-rs/canvas
+// @napi-rs/canvas can load custom fonts with GlobalFonts.registerFromPath(...).
+// It doesn't seem to support WOFF2. Regular OTF works fine.
 const fontsDir = path.resolve(__dirname, '../node_modules/@vexflow-fonts/');
-registerFont(path.join(fontsDir, 'bravura/bravura.otf'), { family: 'Bravura' });
-registerFont(path.join(fontsDir, 'academico/academico.otf'), { family: 'Academico' });
-registerFont(path.join(fontsDir, 'petaluma/petaluma.otf'), { family: 'Petaluma' });
-registerFont(path.join(fontsDir, 'petalumascript/petalumascript.otf'), { family: 'Petaluma Script' });
-registerFont(path.join(fontsDir, 'leland/leland.otf'), { family: 'Leland' });
-registerFont(path.join(fontsDir, 'edwin/edwin-roman.otf'), { family: 'Edwin' });
-registerFont(path.join(fontsDir, 'gonville/gonville.otf'), { family: 'Gonville' });
-registerFont(path.join(fontsDir, 'sebastian/sebastian.otf'), { family: 'Sebastian' });
-registerFont(path.join(fontsDir, 'finaleash/finaleash.otf'), { family: 'Finale Ash' });
+GlobalFonts.registerFromPath(path.join(fontsDir, 'bravura/bravura.otf'), 'Bravura');
+GlobalFonts.registerFromPath(path.join(fontsDir, 'academico/academico.otf'), 'Academico');
+GlobalFonts.registerFromPath(path.join(fontsDir, 'petaluma/petaluma.otf'), 'Petaluma');
+GlobalFonts.registerFromPath(path.join(fontsDir, 'petalumascript/petalumascript.otf'), 'Petaluma Script');
+GlobalFonts.registerFromPath(path.join(fontsDir, 'leland/leland.otf'), 'Leland');
+GlobalFonts.registerFromPath(path.join(fontsDir, 'edwin/edwin-roman.otf'), 'Edwin');
+GlobalFonts.registerFromPath(path.join(fontsDir, 'gonville/gonville.otf'), 'Gonville');
+GlobalFonts.registerFromPath(path.join(fontsDir, 'sebastian/sebastian.otf'), 'Sebastian');
+GlobalFonts.registerFromPath(path.join(fontsDir, 'finaleash/finaleash.otf'), 'Finale Ash');
 
 const dom = new JSDOM(`<!DOCTYPE html><body><div id="qunit-tests"></div></body>`);
 global.window = dom.window;

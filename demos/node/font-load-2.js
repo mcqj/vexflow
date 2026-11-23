@@ -2,22 +2,22 @@
 //   node font-load-2.js
 //
 // Summary:
-//   Use JSDOM and node-canvas to load custom music fonts.
+//   Use JSDOM and @napi-rs/canvas to load custom music fonts.
 //   This demo does not use the VexFlow library.
 //   It demonstrates the basics of drawing music glyphs from SMuFL fonts to a canvas. It saves a PNG file of the canvas's contents.
 
 const fs = require('fs');
 const { JSDOM } = require('jsdom');
-const { registerFont } = require('canvas');
+const { GlobalFonts } = require('@napi-rs/canvas');
 
-// JSDOM uses node-canvas internally. https://www.npmjs.com/package/canvas
-// node-canvas can load custom fonts with registerFont(...).
-// node-canvas doesn't seem to support WOFF2. Regular WOFF works fine.
+// JSDOM uses @napi-rs/canvas internally. https://www.npmjs.com/package/@napi-rs/canvas
+// @napi-rs/canvas can load custom fonts with GlobalFonts.registerFromPath(...).
+// It doesn't seem to support WOFF2. Regular OTF works fine.
 const fontsDir = '../../node_modules/@vexflow-fonts/';
-registerFont(fontsDir + 'bravura/bravura.otf', { family: 'Bravura' });
-registerFont(fontsDir + 'academico/academico.otf', { family: 'Academico' });
-registerFont(fontsDir + 'petaluma/petaluma.otf', { family: 'Petaluma' });
-registerFont(fontsDir + 'petalumascript/petalumascript.otf', { family: 'Petaluma Script' });
+GlobalFonts.registerFromPath(fontsDir + 'bravura/bravura.otf', 'Bravura');
+GlobalFonts.registerFromPath(fontsDir + 'academico/academico.otf', 'Academico');
+GlobalFonts.registerFromPath(fontsDir + 'petaluma/petaluma.otf', 'Petaluma');
+GlobalFonts.registerFromPath(fontsDir + 'petalumascript/petalumascript.otf', 'Petaluma Script');
 
 const html = `<!DOCTYPE html>
 <html>
