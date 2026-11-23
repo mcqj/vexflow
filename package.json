@@ -109,9 +109,6 @@
     "guitar",
     "tablature"
   ],
-  "overrides": {
-    "undici": "6.23.0"
-  },
   "allowScripts": {
     "canvas@3.2.3": true,
     "fsevents@2.3.3": true,
