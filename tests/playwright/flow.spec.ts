@@ -214,3 +214,29 @@ test("matches source-rendered tuplet cases", async ({ page }) => {
     );
   }
 });
+
+test("matches source-rendered stave note cases", async ({ page }) => {
+  await loadSourceTestModule(page, "StaveNote");
+
+  const cases = page.locator("#qunit-tests .testcanvas");
+  const caseIds = await renderCaseIds(page);
+
+  for (const [index, caseId] of caseIds.entries()) {
+    await expect(cases.nth(index).locator(".vex-tabdiv")).toHaveScreenshot(
+      `${index}-${caseId}.png`,
+    );
+  }
+});
+
+test("matches source-rendered formatter cases", async ({ page }) => {
+  await loadSourceTestModule(page, "Formatter");
+
+  const cases = page.locator("#qunit-tests .testcanvas");
+  const caseIds = await renderCaseIds(page);
+
+  for (const [index, caseId] of caseIds.entries()) {
+    await expect(cases.nth(index).locator(".vex-tabdiv")).toHaveScreenshot(
+      `${index}-${caseId}.png`,
+    );
+  }
+});
