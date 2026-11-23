@@ -690,6 +690,8 @@ export class Formatter {
 
     const { spacingList: contextList, map: contextMap } = contexts;
 
+    this.justifyWidth = justifyWidth;
+
     // Reset loss history for evaluator.
     this.lossHistory = [];
 
@@ -920,7 +922,6 @@ export class Formatter {
       iterations--;
     }
 
-    this.justifyWidth = justifyWidth;
     this.positionDependentContexts();
     return this.evaluate();
   }
@@ -931,7 +932,9 @@ export class Formatter {
    * Dependent voices follow the layout of the other voices, so their contexts
    * are not part of the spacing list. Instead, place each one between the
    * surrounding spacing contexts, interpolating by tick. Contexts before the
-   * first or after the last spacing context are aligned with that context.
+   * first spacing context are aligned with it, and trailing contexts are
+   * interpolated across the final note's remaining duration toward the end of
+   * the justified layout.
    */
   protected positionDependentContexts(): void {
     const contexts = this.tickContexts;
@@ -939,6 +942,21 @@ export class Formatter {
 
     const { spacingList, dependentList, map } = contexts;
     if (spacingList.length === 0 || dependentList.length === 0) return;
+
+    const firstSpacingContext = map[spacingList[0]];
+    const lastSpacingTick = spacingList[spacingList.length - 1];
+    const lastSpacingContext = map[lastSpacingTick];
+    const finalTick = lastSpacingTick + lastSpacingContext.getMaxTicks().value();
+    // Use the same effective justification width as the spacing pass.
+    const centerX =
+      this.justifyWidth > 0
+        ? (this.justifyWidth -
+            lastSpacingContext.getMetrics().notePx -
+            lastSpacingContext.getMetrics().totalRightPx -
+            firstSpacingContext.getMetrics().totalLeftPx) /
+          2
+        : undefined;
+    const endX = this.justifyWidth > 0 ? this.justifyWidth : undefined;
 
     let nextIndex = 0;
     dependentList.forEach((tick) => {
@@ -959,9 +977,22 @@ export class Formatter {
         const ratio = (tick - prevTick) / (nextTick - prevTick);
         context.setX(prevX + (nextX - prevX) * ratio);
       } else if (prevTick !== undefined) {
-        context.setX(map[prevTick].getX());
+        const prevX = map[prevTick].getX();
+        if (endX !== undefined && finalTick > prevTick) {
+          // Trailing tickables follow the final note's remaining duration.
+          const ratio = Math.min(1, (tick - prevTick) / (finalTick - prevTick));
+          context.setX(prevX + (endX - prevX) * ratio);
+        } else {
+          context.setX(prevX);
+        }
       } else if (nextTick !== undefined) {
         context.setX(map[nextTick].getX());
+      }
+
+      if (centerX !== undefined) {
+        context.getCenterAlignedTickables().forEach((tickable: Tickable) => {
+          tickable.setCenterXShift(centerX - context.getX());
+        });
       }
     });
   }
