@@ -279,3 +279,29 @@ test("matches source-rendered tab note cases", async ({ page }) => {
     );
   }
 });
+
+test("matches source-rendered ornament cases", async ({ page }) => {
+  await loadSourceTestModule(page, "Ornament");
+
+  const cases = page.locator("#qunit-tests .testcanvas");
+  const caseIds = await renderCaseIds(page);
+
+  for (const [index, caseId] of caseIds.entries()) {
+    await expect(cases.nth(index).locator(".vex-tabdiv")).toHaveScreenshot(
+      `${index}-${caseId}.png`,
+    );
+  }
+});
+
+test("matches source-rendered text note cases", async ({ page }) => {
+  await loadSourceTestModule(page, "TextNote");
+
+  const cases = page.locator("#qunit-tests .testcanvas");
+  const caseIds = await renderCaseIds(page);
+
+  for (const [index, caseId] of caseIds.entries()) {
+    await expect(cases.nth(index).locator(".vex-tabdiv")).toHaveScreenshot(
+      `${index}-${caseId}.png`,
+    );
+  }
+});
